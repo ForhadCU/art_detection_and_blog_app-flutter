@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1008343919631",
+    "project_id": "art-blog-app-flutter",
+    "storage_bucket": "art-blog-app-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008343919631:android:97935474a505eaefc2c77a",
+        "android_client_info": {
+          "package_name": "com.example.art_blog_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1008343919631-5027f7rti0cbatrasuriqbvrq9sroeeb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATzav_9pSDCG7w0lnxq5nEfVCChfyFQZA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1008343919631-5027f7rti0cbatrasuriqbvrq9sroeeb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
