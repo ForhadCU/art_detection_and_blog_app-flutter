@@ -10,29 +10,12 @@ class ImageDetailsModel {
   String? timestamp;
   String? caption;
   String? email;
-  int? momId;
   // File? imgFile;
   // Uint8List? strgImgUri;
   bool? imgFromCamera;
   late String imgUrl;
   late String date;
-  int? babyId;
 
-  // XFile? imgXFile;
-
-/*   ImageDetailsModel(
-      {this.imgUri,
-      this.imgUrl,
-      this.latitude,
-      this.longitude,
-      this.timestamp,
-      this.date,
-      this.caption,
-      this.imgFile,
-      this.imgFromCamera,
-      this.imgXFile}); */
-
-  // ImageDetailsModel.namedConstructor1({required this.imgUrlList});
 
   ImageDetailsModel.imageFromLocal(
       {required this.imgUrl,
@@ -69,9 +52,7 @@ class ImageDetailsModel {
     timestamp = json['timestamp'];
     date = json['date'];
     caption = json['caption'];
-    babyId = json['baby_id'];
     email = json['email'];
-    momId = json[MyKeywords.momId];
   }
 
   Map<String, dynamic> toJson() {
@@ -98,9 +79,7 @@ class ImageDetailsModel {
     map['date'] = date;
     map['timestamp'] = timestamp;
     map['caption'] = caption;
-    map['baby_id'] = babyId;
     map['email'] = email;
-    map[MyKeywords.momId] = momId;
 
     return map;
   }
