@@ -1,6 +1,12 @@
+import 'package:art_blog_app/const/keywords.dart';
+import 'package:art_blog_app/controller/authentication_service.dart';
+import 'package:art_blog_app/models/model.user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 
-class FirestoreProvider {
+Logger logger = Logger();
+
+class MyFirestoreService {
   static void mAddBabyGalleryDataToFirestore(
       {required String email,
       String? caption,
@@ -27,6 +33,18 @@ class FirestoreProvider {
       "date": date,
       "imgFromCamera": imgFromCamera,
     });
+  }
+
+  static Future<bool> mStoreUserCredential(
+      {required FirebaseFirestore firebaseFirestore,
+      required Users user}) async {
+    try {
+      await firebaseFirestore.collection(MyKeywords.USER).doc(user.email).set(user.toJson());
+      return true;
+    } catch (e) {
+      logger.e("Error in storing user credential: $e");
+      return false;
+    }
   }
 
   //c: Valid For Single image selection

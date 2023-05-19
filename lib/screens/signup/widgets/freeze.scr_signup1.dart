@@ -1,7 +1,7 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sort_child_properties_last
+/* // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sort_child_properties_last
 
 import 'package:art_blog_app/animations/Fade_Animation.dart';
-import 'package:art_blog_app/screens/phone_verification/scr.phone_verification.dart';
+import 'package:art_blog_app/screens/phone_verification/freeze.scr.phone_verification.dart';
 import 'package:art_blog_app/screens/signin/scr_signin.dart';
 import 'package:art_blog_app/utils/my_colors.dart';
 import 'package:art_blog_app/utils/my_screensize.dart';
@@ -583,3 +583,4 @@ class _SignupScreen1State extends State<SignupScreen1> {
     );
   }
 }
+ */

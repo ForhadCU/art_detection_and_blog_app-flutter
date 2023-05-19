@@ -43,6 +43,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.0
+  flutter_splash_screen: ^1.0.0+6
   geocoding: ^2.0.4
   geolocator: ^9.0.1
   google_sign_in: ^6.0.0
@@ -51,16 +52,16 @@ dependencies:
   image_picker: ^0.8.6
   intl: ^0.18.0
   logger: ^1.2.2
+  lottie: ^2.3.2
   path: ^1.8.1
   path_provider: ^2.0.11
   path_provider_android: ^2.0.21
   path_provider_ios: ^2.0.11
   pin_code_fields: ^7.4.0
   shared_preferences: ^2.0.13
-  # simple_animations: ^5.0.0+3
   supercharged: ^2.1.1
   thumbnailer: ^2.1.0
-  # tflite:
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_lints: ^2.0.0

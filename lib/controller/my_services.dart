@@ -1,18 +1,22 @@
 import 'dart:io';
 
+import 'package:art_blog_app/controller/firestore_service.dart';
 import 'package:art_blog_app/utils/my_date_format.dart';
 import 'package:art_blog_app/utils/my_image_utility.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as Path;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../const/keywords.dart';
 import '../models/model.image_details.dart';
 
 class MyServices {
-   static Future<List<ImageDetailsModel>?> mPickMultipleImageFromLocal() async {
+  // m: LOCAL OPERATION
+  static Future<List<ImageDetailsModel>?> mPickMultipleImageFromLocal() async {
     try {
       ImagePicker imgpicker = ImagePicker();
       final List<XFile> multipleImages = await imgpicker.pickMultiImage();
@@ -43,7 +47,7 @@ class MyServices {
     }
   }
 
-    static Future<Map<String, dynamic>?> mPickImgFromLocal() async {
+  static Future<Map<String, dynamic>?> mPickImgFromLocal() async {
     try {
       final imgXFile =
           await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -91,7 +95,7 @@ class MyServices {
     }
   }
 
-   static Future<String> mCopyImgFileToNewPath({required File imgFile}) async {
+  static Future<String> mCopyImgFileToNewPath({required File imgFile}) async {
     // getting a directory
     final Directory appDocumentDirectory =
         await getApplicationDocumentsDirectory();
@@ -110,4 +114,25 @@ class MyServices {
     return imgString; */
     return newImgUrl;
   }
+
+  static mLaunchGmailInbox({required String email}) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'https',
+      host: 'mail.google.com',
+      path: '/mail/u/0/#inbox',
+      queryParameters: {'to': email},
+    );
+
+    if (await canLaunch(emailLaunchUri.toString())) {
+      await launch(emailLaunchUri.toString());
+    } else {
+      logger.e('Could not launch Gmail inbox');
+    }
+  }
+
+  static mExitApp() {
+    SystemNavigator.pop();
+  }
+
+  // m: FIREBASE OPERATION
 }

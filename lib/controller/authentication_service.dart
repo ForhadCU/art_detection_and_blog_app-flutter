@@ -1,12 +1,118 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:art_blog_app/const/keywords.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logger/logger.dart';
 
 import '../utils/custom_text.dart';
 
-class Authentication {
+Logger logger = Logger();
+
+class MyAuthenticationService {
+  static User? mCheckUserSignInStatus({required FirebaseAuth firebaseAuth}) {
+    User? user = firebaseAuth.currentUser;
+
+    if (user != null) {
+      // User is already signed in
+      // Perform any necessary actions for a signed-in user
+      if (mCheckUserVerified(firebaseAuth: firebaseAuth, user: user)) {
+        logger.i('User is signed in with the following details:');
+        logger.i('User ID: ${user.uid}');
+        logger.i('Email: ${user.email}');
+        return user;
+      } else {
+        return null;
+      }
+    } else {
+      // User is not signed in
+      // Perform any necessary actions for a non-signed-in user
+      logger.w('User is not signed in');
+      return null;
+    }
+  }
+
+  static bool mCheckUserVerified(
+      {required FirebaseAuth firebaseAuth, required User user}) {
+    // User? user = firebaseAuth.currentUser;
+    if (user.emailVerified) {
+      logger.i("Email is verified");
+      return true;
+    } else {
+      logger.w("Email is not verified");
+      return false;
+    }
+  }
+
+  static Future<dynamic> mSignIn(
+      {required FirebaseAuth firebaseAuth,
+      required String email,
+      required String password}) async {
+    try {
+      UserCredential userCredential =
+          await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      User user = userCredential.user!;
+
+      // Sign-in successful, perform any necessary actions
+      logger.d('User ID: ${user.uid}');
+      logger.d('Email: ${user.email}');
+      return user;
+    } catch (e) {
+      // Sign-in failed, handle the error
+      String error = e.toString();
+      logger.e('Sign-in error: $error');
+      return error;
+    }
+  }
+
+  static Future<bool> mCheckUniqueUserName(
+      {required FirebaseFirestore firebaseFirestore,
+      required String username}) async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await firebaseFirestore.collection(MyKeywords.USER).get();
+    if (querySnapshot.size > 0) {
+      for (var element in querySnapshot.docs) {
+        if (element.get(MyKeywords.username) == username) {
+          logger.w("User name already exist");
+          return false;
+        }
+      }
+      logger.w("User name is Uinque");
+      return true;
+    } else {
+      logger.w("User name is Uinque");
+      return true;
+    }
+  }
+
+  static Future<UserCredential?> mSignUp(
+      {required FirebaseAuth firebaseAuth,
+      required String email,
+      required String password}) async {
+    try {
+      UserCredential userCredential =
+          await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // c: send a verification email here if desired.
+      userCredential.user?.sendEmailVerification();
+
+      return userCredential;
+    } catch (e) {
+      logger.e('Error signing up with email and password: $e');
+
+      return null;
+    }
+  }
+
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
     const String accountExisted = "account-exists-with-different-credential";
     const String crendentialInvalid = "invalid-credential";

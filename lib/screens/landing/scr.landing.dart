@@ -1,13 +1,14 @@
-
 import 'package:art_blog_app/screens/landing/widgets/bottom_nav.dart';
 import 'package:art_blog_app/screens/landing/widgets/my_bottom_sheet.dart';
 import 'package:art_blog_app/utils/my_colors.dart';
 import 'package:art_blog_app/utils/my_screensize.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class LandingScreen extends StatefulWidget {
-  const LandingScreen({super.key});
+  final User user;
+  const LandingScreen({super.key, required this.user});
 
   @override
   State<LandingScreen> createState() => _LandingScreenState();
@@ -17,7 +18,14 @@ class _LandingScreenState extends State<LandingScreen> {
   final String _userName = "user_0012001";
   final String _userEmail = "user_0012001@gmail.com";
   int _pageIndex = 0;
-  final Logger logger = Logger( );
+  final Logger logger = Logger();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    logger.d("I am Landing Screen");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +46,10 @@ class _LandingScreenState extends State<LandingScreen> {
           onPressed: () {
             // mShowBottomSheet();
             showModalBottomSheet(
-              useSafeArea: true,
+                useSafeArea: true,
                 context: context,
                 builder: (context) {
-                  return MyBottomSheet(callback: () {
-                  });
+                  return MyBottomSheet(callback: () {});
                 });
 
             /*   BottomSheet(

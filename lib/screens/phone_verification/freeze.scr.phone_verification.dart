@@ -1,4 +1,4 @@
-import 'package:art_blog_app/screens/landing/scr.landing.dart';
+/* import 'package:art_blog_app/screens/landing/scr.landing.dart';
 import 'package:art_blog_app/utils/my_screensize.dart';
 import 'package:flutter/material.dart';
 
@@ -245,3 +245,4 @@ class PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     );
   }
 }
+ */
