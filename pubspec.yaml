@@ -1,5 +1,6 @@
-name: art_blog_app
+name: flutter_application_1
 description: A new Flutter project.
+
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -19,7 +20,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0-257.0.dev <4.0.0"
+  sdk: ">=2.18.5 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -39,27 +40,30 @@ dependencies:
   equatable: ^2.0.0
   firebase_auth: ^4.1.0
   firebase_core: ^2.10.0
-  firebase_storage: ^11.0.3
+  firebase_storage: ^11.2.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.0
+  flutter_shimmer: ^2.1.2
   flutter_splash_screen: ^1.0.0+6
   geocoding: ^2.0.4
   geolocator: ^9.0.1
+  getwidget: ^3.1.1
   google_sign_in: ^6.0.0
   http: ^0.13.5
   image: ^4.0.15
-  image_picker: ^0.8.6
+  image_picker: ^0.8.7+5
   intl: ^0.18.0
   logger: ^1.2.2
   lottie: ^2.3.2
   path: ^1.8.1
-  path_provider: ^2.0.11
+  path_provider: ^2.0.15
   path_provider_android: ^2.0.21
   path_provider_ios: ^2.0.11
   pin_code_fields: ^7.4.0
   shared_preferences: ^2.0.13
   supercharged: ^2.1.1
+  tflite: null
   thumbnailer: ^2.1.0
   url_launcher: ^6.1.11
 
@@ -79,8 +83,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/
     - assets/images/
-  #   - images/a_dot_ham.jpeg
+    - assets/animations/
+    # - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

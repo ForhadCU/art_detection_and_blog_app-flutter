@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:art_blog_app/utils/my_colors.dart';
-import 'package:art_blog_app/utils/my_screensize.dart';
+
 import 'package:flutter/material.dart';
+
+import '../../../utils/my_colors.dart';
+import '../../../utils/my_screensize.dart';
 
 class HomeBottomNavBar extends StatefulWidget {
   const HomeBottomNavBar({
@@ -151,7 +153,7 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
                     height: 4,
                   ),
                   Text(
-                    "Gallery",
+                    "Profile",
                     style: TextStyle(color: tabColor1),
                   )
                 ],

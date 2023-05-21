@@ -1,9 +1,5 @@
 import 'dart:io';
 
-import 'package:art_blog_app/controller/firestore_service.dart';
-import 'package:art_blog_app/utils/my_date_format.dart';
-import 'package:art_blog_app/utils/my_image_utility.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
@@ -13,6 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../const/keywords.dart';
 import '../models/model.image_details.dart';
+import '../utils/my_date_format.dart';
+import '../utils/my_image_utility.dart';
+
+Logger logger = Logger();
 
 class MyServices {
   // m: LOCAL OPERATION

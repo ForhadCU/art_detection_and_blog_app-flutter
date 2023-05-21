@@ -1,5 +1,6 @@
-import 'package:art_blog_app/utils/my_colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../utils/my_colors.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

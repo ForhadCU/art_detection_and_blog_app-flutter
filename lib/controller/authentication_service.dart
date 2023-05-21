@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:art_blog_app/const/keywords.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 
+import '../const/keywords.dart';
 import '../utils/custom_text.dart';
 
 Logger logger = Logger();

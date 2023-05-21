@@ -1,18 +1,18 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sort_child_properties_last
 
-import 'package:art_blog_app/controller/authentication_service.dart';
-import 'package:art_blog_app/controller/firestore_service.dart';
-import 'package:art_blog_app/controller/my_services.dart';
-import 'package:art_blog_app/models/model.user.dart';
-import 'package:art_blog_app/screens/signin/scr_signin.dart';
-import 'package:art_blog_app/utils/my_colors.dart';
-import 'package:art_blog_app/utils/my_screensize.dart';
-import 'package:art_blog_app/widgets/my_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+
+import '../../controller/authentication_service.dart';
+import '../../controller/firestore_service.dart';
+import '../../controller/my_services.dart';
+import '../../models/model.user.dart';
+import '../../utils/my_colors.dart';
+import '../../utils/my_screensize.dart';
+import '../../widgets/my_widget.dart';
+import '../signin/scr_signin.dart';
 
 enum FormData {
   FullName,
@@ -613,7 +613,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   phone: phoneController.value.text,
                   ts: DateTime.now().millisecondsSinceEpoch.toString());
               // c: store the users data in to Firestore
-              bool isSuccess = await MyFirestoreService.mStoreUserCredential(
+              await MyFirestoreService.mStoreUserCredential(
                   firebaseFirestore: firebaseFirestore, user: users);
 
               Future.delayed(Duration(milliseconds: 1)).then((value) {
@@ -621,8 +621,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         context: context,
                         message: "Email verification has been sent",
                         buttonText: "Check email")
-                    .then((value) async =>
-                        { await MyServices.mLaunchGmailInbox(email: user.email!), MyServices.mExitApp()});
+                    .then((value) async => {
+                          await MyServices.mLaunchGmailInbox(
+                              email: user.email!),
+                          MyServices.mExitApp()
+                        });
               });
             }
           } else {

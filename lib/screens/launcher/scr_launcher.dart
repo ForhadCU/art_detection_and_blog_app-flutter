@@ -1,14 +1,12 @@
-import 'package:art_blog_app/screens/landing/scr.landing.dart';
-import 'package:art_blog_app/screens/signin/scr_signin.dart';
-import 'package:art_blog_app/utils/my_screensize.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../controller/authentication_service.dart';
 import '../../utils/my_colors.dart';
+import '../../utils/my_screensize.dart';
+import '../landing/scr.landing.dart';
+import '../signin/scr_signin.dart';
 
 class LauncherPage extends StatefulWidget {
   const LauncherPage({super.key});
@@ -27,7 +25,7 @@ class _LauncherPageState extends State<LauncherPage> {
 
     User? user = MyAuthenticationService.mCheckUserSignInStatus(
         firebaseAuth: firebaseAuth);
-    Future.delayed(const Duration(milliseconds: 1000)).then((value) {
+    Future.delayed(const Duration(milliseconds: 3000)).then((value) {
       if (user != null) {
         mGoForward(user);
       } else {

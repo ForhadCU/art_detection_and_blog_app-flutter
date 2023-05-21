@@ -1,14 +1,14 @@
-import 'package:art_blog_app/animations/Fade_Animation.dart';
-import 'package:art_blog_app/controller/authentication_service.dart';
-import 'package:art_blog_app/controller/my_services.dart';
-import 'package:art_blog_app/screens/landing/scr.landing.dart';
-import 'package:art_blog_app/screens/signup/scr_signup.dart';
-import 'package:art_blog_app/utils/my_screensize.dart';
-import 'package:art_blog_app/widgets/my_widget.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../controller/authentication_service.dart';
+import '../../controller/my_services.dart';
 import '../../utils/my_colors.dart';
+import '../../utils/my_screensize.dart';
+import '../../widgets/my_widget.dart';
+import '../landing/scr.landing.dart';
+import '../signup/scr_signup.dart';
 
 enum FormData {
   Email,

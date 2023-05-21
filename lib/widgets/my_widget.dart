@@ -1,6 +1,7 @@
-import 'package:art_blog_app/utils/my_screensize.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/my_screensize.dart';
 
 class MyWidget {
   static Future<dynamic> vShowWarnigDialog(
@@ -24,7 +25,7 @@ class MyWidget {
         )).show();
   }
 
-  static Widget vButtonProgressLoader({double? width, double? height, Color? color}) {
+  static Widget vButtonProgressLoader({double? width, double? height, Color? color, String? labelText}) {
     return  Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -39,7 +40,7 @@ class MyWidget {
             width:
                 8), // Add some spacing between the CircularProgressIndicator and text
         Text(
-          'Loading',
+         labelText ?? 'Loading',
           style: TextStyle(color: color ?? Colors.white),
         ), // Replace with your desired text
       ],
