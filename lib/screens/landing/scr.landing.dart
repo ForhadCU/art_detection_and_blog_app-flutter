@@ -1,21 +1,24 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/controller/authentication_service.dart';
 import 'package:flutter_application_1/controller/firestore_service.dart';
 import 'package:flutter_application_1/models/model.post.dart';
 import 'package:flutter_application_1/screens/landing/pages/comments.dart';
-import 'package:getwidget/components/shimmer/gf_shimmer.dart';
+import 'package:flutter_application_1/screens/profile/scr_profile.dart';
+import 'package:flutter_application_1/screens/signin/scr_signin.dart';
+import 'package:flutter_application_1/utils/my_date_format.dart';
+import 'package:flutter_application_1/widgets/my_widget.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../utils/my_colors.dart';
 import '../../utils/my_screensize.dart';
 import 'widgets/bottom_nav.dart';
 import 'widgets/my_bottom_sheet.dart';
-import '';
 
 class LandingScreen extends StatefulWidget {
   final User user;
@@ -27,26 +30,40 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen> {
   final String _userName = "user_0012001";
-  final String _imgCategory = "Drawing";
+  final String _imgCategory = "all category";
   final String _userEmail = "user_0012001@gmail.com";
   int _pageIndex = 0;
   final Logger logger = Logger();
-  late FirebaseFirestore firebaseFirestore;
-  bool _isDataLoading = false;
+  late FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  bool _isDataLoading = true;
   String _dropDownValue = "All Category";
   String _likes = "23";
   String _comments = "30";
   final String _uploadedTime = "12, june 2023";
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  List<Post>? posts;
+  late ScrollController _scrollController = ScrollController();
 
+// >>
   @override
   void initState() {
     super.initState();
-    logger.d("I am Landing Screen");
-    firebaseFirestore = FirebaseFirestore.instance;
+    logger.d("I am Init");
+
+    mLoadData(); // c: Load latest 10 posts from firebase firestore
+
+    mControlListViewSrolling(); // c: Post listView scroll listener for control pagination
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    logger.d("I am build");
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -74,7 +91,6 @@ class _LandingScreenState extends State<LandingScreen> {
         bottomNavigationBar: HomeBottomNavBar(
           pageIndex: _pageIndex,
           fabLocation: FloatingActionButtonLocation.centerDocked,
-          // shape: const CircularNotchedRectangle(),
           shape: const CircularNotchedRectangle(),
           callback: (int pageIndex) {
             setState(() {
@@ -83,28 +99,10 @@ class _LandingScreenState extends State<LandingScreen> {
           },
         ),
         body: _pageIndex == 0
-            ? _isDataLoading
-                ? GFShimmer(
-                    child: Container(
-                    color: Colors.black38,
-                    width: MyScreenSize.mGetWidth(context, 80),
-                    height: MyScreenSize.mGetHeight(context, 60),
-                    child: const Text("This is"),
-                  ))
-                : Column(
-                    children: [
-                      vCategoryDropdown(),
-                      SizedBox(
-                        height: 6,
-                      ),
-                      vPostList(),
-                    ],
-                  )
+            ? vHome()
             : _pageIndex == 1
-                ? Center(child: Text(_pageIndex.toString()))
-                : _pageIndex == 2
-                    ? Center(child: Text(_pageIndex.toString()))
-                    : Center(child: Text(_pageIndex.toString())));
+                ? ProfilePage()
+                : null);
   }
 
   Widget vActionItems() {
@@ -189,7 +187,7 @@ class _LandingScreenState extends State<LandingScreen> {
             ),
             leading: const Icon(Icons.share),
             onTap: () {
-              Navigator.pop(context);
+              mOnClickSignOut();
             },
           ),
         ],
@@ -236,8 +234,19 @@ class _LandingScreenState extends State<LandingScreen> {
                 });
 
                 setState(() {
-                  logger.d("Set state called");
-                });
+              _isDataLoading = true;
+            });
+            await MyFirestoreService.mFetchInitialPost(
+                    firebaseFirestore: firebaseFirestore,
+                    category: "all category")
+                .then((value) {
+              posts!.clear;
+              setState(() {
+                posts = value;
+                _isDataLoading = false;
+              });
+            });
+
               }
             });
           });
@@ -247,9 +256,12 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget vPostList() {
     return Expanded(
       child: ListView.builder(
-          itemCount: 5,
+          controller: _scrollController,
+          itemCount: posts!.length + 1,
           itemBuilder: ((context, index) {
-            return vItem();
+            return index < posts!.length
+                ? vItem(index)
+                : MyWidget.vPostPaginationShimmering(context: context);
           })),
     );
   }
@@ -262,20 +274,31 @@ class _LandingScreenState extends State<LandingScreen> {
       child: DropdownButtonHideUnderline(
         child: GFDropdown(
           isExpanded: true,
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           borderRadius: BorderRadius.circular(5),
           border: const BorderSide(color: Colors.black12, width: 1),
           dropdownButtonColor: Colors.white,
           value: _dropDownValue,
-          onChanged: (newValue) {
+          onChanged: (newValue) async {
+            _dropDownValue = newValue!;
             setState(() {
-              _dropDownValue = newValue!;
-              logger.d("Clicked: $newValue");
+              _isDataLoading = true;
+            });
+            await MyFirestoreService.mFetchInitialPost(
+                    firebaseFirestore: firebaseFirestore,
+                    category: _dropDownValue)
+                .then((value) {
+              posts!.clear;
+              setState(() {
+                posts = value;
+                _isDataLoading = false;
+                logger.d("Clicked: $newValue");
+              });
             });
           },
           items: [
             'All Category',
-            'Drawing',
+            'Drawings',
             'Engraving',
             'Iconography',
             'Painting',
@@ -291,7 +314,7 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  Widget vCatAndCap() {
+  Widget vCatAndCap(Post post) {
     return Column(
       children: [
         Row(
@@ -304,7 +327,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: MyColors.thirdColor),
               child: Text(
-                _imgCategory,
+                post.category!,
                 style: TextStyle(color: MyColors.secondColor),
               ),
             ),
@@ -316,24 +339,28 @@ class _LandingScreenState extends State<LandingScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text("Some quick example text to build on the card"),
+            Text(post.caption!),
           ],
         ),
       ],
     );
   }
 
-  Widget vItem() {
+  Widget vItem(int index) {
+    Post post = posts![index];
     return GFCard(
       // color: Colors.white,
       elevation: 5,
       boxFit: BoxFit.cover,
       titlePosition: GFPosition.start,
-      image: Image.asset(
-        'assets/images/3399_mainfoto_05.jpg',
+      // e: test
+      /* image: Image.network(
+        post.imgUri!,
         fit: BoxFit.cover,
-      ),
-      showImage: true,
+      ), */
+      // e: test
+      // showImage: true,
+      showImage: false,
       title: GFListTile(
         margin: EdgeInsets.only(bottom: 6),
         shadow: BoxShadow(color: Colors.white),
@@ -342,22 +369,24 @@ class _LandingScreenState extends State<LandingScreen> {
           size: 24,
           backgroundImage: AssetImage('assets/images/user.png'),
         ),
-        titleText: _userName,
-        subTitleText: _uploadedTime,
+        // e: test
+        // titleText: post.users!.username,
+        titleText: post.postId,
+        subTitleText: mFormatDateTime(post),
       ),
-      content: vCatAndCap(),
+      content: vCatAndCap(post),
       buttonBar: GFButtonBar(
         padding: EdgeInsets.all(6),
         spacing: 16,
         children: <Widget>[
-          vLikeButton(),
-          vCommentButton(),
+          vLikeButton(post),
+          vCommentButton(post),
         ],
       ),
     );
   }
 
-  Widget vLikeButton() {
+  Widget vLikeButton(Post post) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -379,15 +408,20 @@ class _LandingScreenState extends State<LandingScreen> {
         SizedBox(
           height: 4,
         ),
-        Text(
-          _likes,
-          style: TextStyle(color: Colors.black54),
-        )
+        post.numOfLikes == null
+            ? Text(
+                "0",
+                style: TextStyle(color: Colors.black54),
+              )
+            : Text(
+                "${post.numOfLikes}",
+                style: TextStyle(color: Colors.black54),
+              )
       ],
     );
   }
 
-  Widget vCommentButton() {
+  Widget vCommentButton(Post post) {
     return InkWell(
       onTap: () {
         mOnClickCommentButton();
@@ -413,10 +447,15 @@ class _LandingScreenState extends State<LandingScreen> {
           SizedBox(
             height: 4,
           ),
-          Text(
-            _comments,
-            style: TextStyle(color: Colors.black54),
-          )
+          post.numOfComments == null
+              ? Text(
+                  "0",
+                  style: TextStyle(color: Colors.black54),
+                )
+              : Text(
+                  "${post.numOfComments}",
+                  style: TextStyle(color: Colors.black54),
+                )
         ],
       ),
     );
@@ -426,5 +465,112 @@ class _LandingScreenState extends State<LandingScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return CommentsPage();
     }));
+  }
+
+  Widget vHome() {
+    return Column(
+      children: [
+        vCategoryDropdown(),
+        SizedBox(
+          height: 6,
+        ),
+        _isDataLoading
+            ? MyWidget.vPostShimmering(context: context)
+            : posts == null || posts!.isEmpty
+                ? Expanded(
+                  child: Center(
+                      child: Text(
+                        "No result found.",
+                        style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                )
+                : vPostList(),
+      ],
+    );
+  }
+
+  void mOnClickSignOut() async {
+    await MyAuthenticationService.mSignOut(firebaseAuth: _firebaseAuth)
+        .then((value) {
+      if (value) {
+        logger.w("Sign Out");
+        Navigator.pop(context);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return LoginScreen();
+        }));
+      }
+    });
+  }
+
+  void mLoadData() async {
+    logger.d("Loading post...");
+    MyFirestoreService.mFetchInitialPost(
+            firebaseFirestore: firebaseFirestore, category: _imgCategory)
+        .then((value) {
+      setState(() {
+        posts = value;
+        _isDataLoading = false;
+      });
+    });
+  }
+
+  String mFormatDateTime(Post post) {
+    int currentDate = DateTime.now().day;
+    int uploadedDate =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(post.ts!)).day;
+/*     MyDateForamt.mFormateDate2(
+        DateTime.fromMillisecondsSinceEpoch(int.parse(post.ts!))); */
+    const String today = "Today";
+    const String yesterday = "Yesterday";
+
+    if (currentDate == uploadedDate) {
+      return today;
+    } else if (uploadedDate == currentDate - 1) {
+      return yesterday;
+    } else {
+      return MyDateForamt.mFormateDate2(
+          DateTime.fromMillisecondsSinceEpoch(int.parse(post.ts!)));
+    }
+  }
+
+  void mControlListViewSrolling() {
+    // c: add a scroll listener to scrollController
+    _scrollController.addListener(mScrollListener);
+  }
+
+  void mScrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      // c: Reached the end of the ListView
+      // c: Perform any actions or load more data
+      // c: You can trigger pagination or fetch more items here
+
+      logger.w("End of List");
+      mLoadMore();
+    }
+  }
+
+  void mLoadMore() async {
+    await MyFirestoreService.mFetchMorePosts(
+            firebaseFirestore: firebaseFirestore,
+            category: _dropDownValue,
+            lastVisibleDocumentId: posts!.last.postId!)
+        .then((value) {
+      logger.w(value.length);
+      if (value.isNotEmpty) {
+        /*     List<Post> tempPosts = posts!;
+        posts!.clear(); */
+        setState(() {
+          posts!.addAll(value);
+        });
+      } else {
+        logger.w("No Data exist");
+      }
+    });
   }
 }

@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/my_screensize.dart';
 
 import '../../utils/my_colors.dart';
 
@@ -32,135 +35,83 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor: Colors.white,
+
+      /* appBar: AppBar(
         elevation: 0.0,
         backgroundColor: const Color(0xff555555),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        ),
-      ),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                height: 450,
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    textfield(
-                      hintText: 'Username',
-                    ),
-                    textfield(
-                      hintText: 'Email',
-                    ),
-                    textfield(
-                      hintText: 'Password',
-                    ),
-                    textfield(
-                      hintText: 'Confirm password',
-                    ),
-                    SizedBox(
-                      height: 55,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: MyColors.secondColor),
-                        onPressed: () {},
-                        child: const Center(
-                          child: Text(
-                            "Update",
-                            style: TextStyle(
-                              fontSize: 23,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+        
+      ), */
+      body: Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                vProfileImage(MyScreenSize.mGetWidth( context, 32), MyScreenSize.mGetHeight(context, 24),),
+                /* Positioned(
+                  bottom: 28,
+                  right: 5,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black54,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          CustomPaint(
-            painter: HeaderCurvedContainer(),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  "Profile",
-                  style: TextStyle(
-                    fontSize: 35,
-                    letterSpacing: 1.5,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                      onPressed: () {},
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.width / 2,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 5),
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  image: const DecorationImage(
-                      fit: BoxFit.cover,
-                      // image: AssetImage('images/profile.png'),
-                      image: NetworkImage(
-                          "https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg")),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 270, left: 184),
-            child: CircleAvatar(
-              backgroundColor: Colors.black54,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: () {},
-              ),
+                ), */
+              ],
             ),
-          )
-        ],
+
+            /*   CustomPaint(
+              painter: HeaderCurvedContainer(),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+              ),
+            ), */
+          ],
+        ),
       ),
     );
   }
+
+  Widget vProfileImage(double height, double width) {
+    return Container(
+      width:height ,
+      height: width,
+      decoration: BoxDecoration(
+        border: Border.all(color: MyColors.fourthColor, width: 5),
+        shape: BoxShape.circle,
+        color: MyColors.fourthColor,
+        image: const DecorationImage(
+            fit: BoxFit.contain,
+            // image: AssetImage('images/profile.png'),
+            image: AssetImage("assets/images/user.png")),
+      ),
+    );
+  }
+
+  // Widget 
 }
 
-class HeaderCurvedContainer extends CustomPainter {
+/* class HeaderCurvedContainer extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()..color = const Color(0xff555555);
+    Paint paint = Paint()..color = MyColors.thirdColor;
     Path path = Path()
-      ..relativeLineTo(0, 150)
-      ..quadraticBezierTo(size.width / 2, 225, size.width, 150)
-      ..relativeLineTo(0, -150)
+      ..relativeLineTo(0, 50)
+      ..quadraticBezierTo(size.width / 2, 225, size.width, 50)
+      ..relativeLineTo(0, -50)
       ..close();
     canvas.drawPath(path, paint);
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
+} */

@@ -24,9 +24,21 @@ class MyKeywords {
   static const String caption = "caption";
   static const String num_of_likes = "num_of_likes";
   static const String num_of_dislikes = "num_of_dislikes";
+  static const String num_of_comments = "num_of_comments";
   static const String category = "category";
   static const String comment_id = "comment_id";
   static const String text = "text";
+  static const String all_cat = "all category";
+  static const String drawing = "0 drawings";
+  static const String engraving = "1 engraving";
+  static const String iconography = "2 iconography";
+  static const String painting = "3 painting";
+  static const String sculpture = "4 sculpture";
+  static const String liker = "liker";
+  static const String disliker = "disliker";
+  static const String commenter = "commenter";
+  static const String users = "users";
+  
 
   // m: For Sharedpreparance
   static const String singleImgUrls = "singleImgUrls";

@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/my_date_format.dart';
 import 'package:logger/logger.dart';
 
 import '../../controller/authentication_service.dart';
@@ -129,10 +130,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           height: 20,
                         ),
                         _vConfirmPass(),
-                        /*  const SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         _vDateOfBirth(),
+                        /*  
                         const SizedBox(
                           height: 20,
                         ),
@@ -166,11 +168,12 @@ class _SignupScreenState extends State<SignupScreen> {
       height: 40,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0),
-          color:
-              selected == FormData.ConfirmPassword ? enabled : backgroundColor),
+          color: selected == FormData.dob ? enabled : backgroundColor),
       padding: const EdgeInsets.all(5.0),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          mShowDatePicker();
+        },
         child: TextField(
           controller: dobController,
           enabled: false,
@@ -182,7 +185,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 color: deaible,
                 size: 20,
               ),
-              hintText: 'Date of Birth',
+              hintText: 'Pick Date of birth',
               hintStyle: TextStyle(color: deaible, fontSize: 12)),
           textAlignVertical: TextAlignVertical.center,
           style: TextStyle(
@@ -220,7 +223,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
         style: TextButton.styleFrom(
             fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
-                MyScreenSize.mGetHeight(context, 8)),
+                MyScreenSize.mGetHeight(context, 6)),
             backgroundColor: MyColors.firstColor,
             // backgroundColor: const Color(0xFF2697FF),
             padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 80),
@@ -579,7 +582,8 @@ class _SignupScreenState extends State<SignupScreen> {
         phoneController.value.text.isNotEmpty &&
         emailController.value.text.isNotEmpty &&
         passwordController.value.text.isNotEmpty &&
-        confirmPasswordController.value.text.isNotEmpty) {
+        confirmPasswordController.value.text.isNotEmpty &&
+        dobController.value.text.isNotEmpty) {
       return true;
     } else {
       return false;
@@ -611,6 +615,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   email: user.email,
                   username: usernameController.value.text,
                   phone: phoneController.value.text,
+                  dob: dobController.value.text,
                   ts: DateTime.now().millisecondsSinceEpoch.toString());
               // c: store the users data in to Firestore
               await MyFirestoreService.mStoreUserCredential(
@@ -651,6 +656,21 @@ class _SignupScreenState extends State<SignupScreen> {
 
     setState(() {
       isLoading = false;
+    });
+  }
+
+  void mShowDatePicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now().add(Duration(days: -40000)),
+            lastDate: DateTime.now())
+        .then((value) {
+      if (value != null) {
+        setState(() {
+          dobController.text = MyDateForamt.mFormateDate2(value!);
+        });
+      }
     });
   }
 }

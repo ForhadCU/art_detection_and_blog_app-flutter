@@ -170,6 +170,13 @@ class MyAuthenticationService {
     return user;
   }
 
+  static Future<bool> mSignOut({required FirebaseAuth firebaseAuth}) async {
+    bool isSignedOut = false;
+    await firebaseAuth.signOut().then((value) => isSignedOut = true);
+
+    return isSignedOut;
+  }
+
 /*   static Future<User?> signInWithGoogle() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final GoogleSignIn _googleSignIn = GoogleSignIn();

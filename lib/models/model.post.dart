@@ -1,5 +1,8 @@
 // ignore_for_file: unnecessary_getters_setters
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/models/model.user.dart';
+
 class Post {
   String? _postId;
   String? _email;
@@ -7,24 +10,29 @@ class Post {
   String? _imgUri;
   int? _numOfLikes;
   int? _numOfDislikes;
+  int? _numOfComments;
   String? _category;
   String? _ts;
   List<Liker>? _liker;
   List<Disliker>? _disliker;
   List<Commenter>? _commenter;
+  Users? _users;
 
-  Post(
-      {String? postId,
-      String? email,
-      String? caption,
-      String? imgUri,
-      int? numOfLikes,
-      int? numOfDislikes,
-      String? category,
-      String? ts,
-      List<Liker>? liker,
-      List<Disliker>? disliker,
-      List<Commenter>? commenter}) {
+  Post({
+    String? postId,
+    String? email,
+    String? caption,
+    String? imgUri,
+    int? numOfLikes,
+    int? numOfDislikes,
+    int? numOfComments,
+    String? category,
+    String? ts,
+    List<Liker>? liker,
+    List<Disliker>? disliker,
+    List<Commenter>? commenter,
+    Users? users,
+  }) {
     if (postId != null) {
       _postId = postId;
     }
@@ -43,6 +51,9 @@ class Post {
     if (numOfDislikes != null) {
       _numOfDislikes = numOfDislikes;
     }
+     if (numOfComments != null) {
+      _numOfComments = numOfComments;
+    }
     if (category != null) {
       _category = category;
     }
@@ -58,6 +69,9 @@ class Post {
     if (commenter != null) {
       _commenter = commenter;
     }
+    if (users != null) {
+      _users = users;
+    }
   }
 
   String? get postId => _postId;
@@ -72,6 +86,8 @@ class Post {
   set numOfLikes(int? numOfLikes) => _numOfLikes = numOfLikes;
   int? get numOfDislikes => _numOfDislikes;
   set numOfDislikes(int? numOfDislikes) => _numOfDislikes = numOfDislikes;
+   int? get numOfComments => _numOfComments;
+  set numOfComments(int? numOfComments) => _numOfComments = numOfComments;
   String? get category => _category;
   set category(String? category) => _category = category;
   String? get ts => _ts;
@@ -82,8 +98,10 @@ class Post {
   set disliker(List<Disliker>? disliker) => _disliker = disliker;
   List<Commenter>? get commenter => _commenter;
   set commenter(List<Commenter>? commenter) => _commenter = commenter;
+  Users? get users => _users;
+  set users(Users? users) => _users = users;
 
-  Post.fromJson(Map<String, dynamic> json) {
+ /*  Post.fromJson(Map<String, dynamic> json) {
     _postId = json['post_id'];
     _email = json['email'];
     _caption = json['caption'];
@@ -92,6 +110,7 @@ class Post {
     _numOfDislikes = json['num_of_dislikes'];
     _category = json['category'];
     _ts = json['ts'];
+    _users = json['users'];
     if (json['liker'] != null) {
       _liker = <Liker>[];
       json['liker'].forEach((v) {
@@ -110,7 +129,7 @@ class Post {
         _commenter!.add(Commenter.fromJson(v));
       });
     }
-  }
+  } */
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -120,8 +139,10 @@ class Post {
     data['img_uri'] = _imgUri;
     data['num_of_likes'] = _numOfLikes;
     data['num_of_dislikes'] = _numOfDislikes;
+    data['num_of_comments'] = _numOfComments;
     data['category'] = _category;
     data['ts'] = _ts;
+    // data['users'] = _users!.toJson();
     if (_liker != null) {
       data['liker'] = _liker!.map((v) => v.toJson()).toList();
     }
@@ -131,6 +152,7 @@ class Post {
     if (_commenter != null) {
       data['commenter'] = _commenter!.map((v) => v.toJson()).toList();
     }
+
     return data;
   }
 }

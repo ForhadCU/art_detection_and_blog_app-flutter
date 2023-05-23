@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/controller/my_services.dart';
 import 'package:flutter_application_1/utils/my_colors.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
@@ -17,6 +17,8 @@ class CommentsPage extends StatefulWidget {
 }
 
 class _CommentsPageState extends State<CommentsPage> {
+  final TextEditingController _editingControllerComment =
+      TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,44 +57,66 @@ class _CommentsPageState extends State<CommentsPage> {
             }));
   }
 
-  Widget vItem(){
+  Widget vItem() {
     return Column(
-                children: [
-                  GFListTile(
-                    shadow: BoxShadow(color: Colors.white),
-                    padding: EdgeInsets.all(0),
-                    margin: EdgeInsets.only(left: 12 ,right: 12, top: 8),
-                    color: Colors.white,
-                    avatar: GFAvatar(
-                        backgroundImage: AssetImage('assets/images/user.png'),
-                        size: 20,
-                        shape: GFAvatarShape.circle),
-                    titleText: "username",
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 8),
-                    child: GFCard(
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 0,
-                      color: MyColors.fourthColor,
-                      content: Text(
-                          "This is comment, This is comment, his is comment,"
-                          "This is comment, his is comment, This is comment, "),
-                    ),
-                  ),
-                  Divider(thickness: 1, color: Colors.black26, height: 1,)
-                ],
-              );
+      children: [
+        GFListTile(
+          shadow: BoxShadow(color: Colors.white),
+          padding: EdgeInsets.all(0),
+          margin: EdgeInsets.only(left: 12, right: 12, top: 8),
+          color: Colors.white,
+          avatar: GFAvatar(
+              backgroundImage: AssetImage('assets/images/user.png'),
+              size: 20,
+              shape: GFAvatarShape.circle),
+          titleText: "username",
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 8),
+          child: GFCard(
+            borderRadius: BorderRadius.circular(8),
+            elevation: 0,
+            color: MyColors.fourthColor,
+            content: Text("This is comment, This is comment, his is comment,"
+                "This is comment, his is comment, This is comment, "),
+          ),
+        ),
+        Divider(
+          thickness: 1,
+          color: Colors.black26,
+          height: 1,
+        )
+      ],
+    );
   }
 
   Widget vInputComment() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: GFTextField(
+        controller: _editingControllerComment,
         maxLines: 2,
-        maxLength:
-            200, /* decoration: InputDecoration(border: OutlineInputBorder()) */
+        maxLength: 200,
+        decoration: InputDecoration(
+            hintText: "Write a comment",
+            suffixIcon: IconButton(
+              onPressed: () {
+                mOnClickSendComment();
+              },
+              icon: Icon(Icons.send),
+              color: Colors.black45,
+            )),
+        /* decoration: InputDecoration(border: OutlineInputBorder()) */
       ),
     );
+  }
+
+  void mOnClickSendComment() {
+    // e: Add comment
+    if (_editingControllerComment.value.text.isNotEmpty) {
+      String comment = _editingControllerComment.value.text;
+
+      logger.d(comment);
+    }
   }
 }
