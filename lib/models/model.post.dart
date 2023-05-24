@@ -17,6 +17,7 @@ class Post {
   List<Disliker>? _disliker;
   List<Commenter>? _commenter;
   Users? _users;
+  bool? _likedStatus;
 
   Post({
     String? postId,
@@ -28,6 +29,7 @@ class Post {
     int? numOfComments,
     String? category,
     String? ts,
+    bool? likedStatus,
     List<Liker>? liker,
     List<Disliker>? disliker,
     List<Commenter>? commenter,
@@ -35,6 +37,9 @@ class Post {
   }) {
     if (postId != null) {
       _postId = postId;
+    }
+    if (likedStatus != null) {
+      _likedStatus = likedStatus;
     }
     if (email != null) {
       _email = email;
@@ -51,7 +56,7 @@ class Post {
     if (numOfDislikes != null) {
       _numOfDislikes = numOfDislikes;
     }
-     if (numOfComments != null) {
+    if (numOfComments != null) {
       _numOfComments = numOfComments;
     }
     if (category != null) {
@@ -76,6 +81,8 @@ class Post {
 
   String? get postId => _postId;
   set postId(String? postId) => _postId = postId;
+  bool? get likeStatus => _likedStatus;
+  set likeStatus(bool? likedStatus) => _likedStatus = likedStatus;
   String? get email => _email;
   set email(String? email) => _email = email;
   String? get caption => _caption;
@@ -86,7 +93,7 @@ class Post {
   set numOfLikes(int? numOfLikes) => _numOfLikes = numOfLikes;
   int? get numOfDislikes => _numOfDislikes;
   set numOfDislikes(int? numOfDislikes) => _numOfDislikes = numOfDislikes;
-   int? get numOfComments => _numOfComments;
+  int? get numOfComments => _numOfComments;
   set numOfComments(int? numOfComments) => _numOfComments = numOfComments;
   String? get category => _category;
   set category(String? category) => _category = category;
@@ -101,7 +108,7 @@ class Post {
   Users? get users => _users;
   set users(Users? users) => _users = users;
 
- /*  Post.fromJson(Map<String, dynamic> json) {
+  /*  Post.fromJson(Map<String, dynamic> json) {
     _postId = json['post_id'];
     _email = json['email'];
     _caption = json['caption'];
@@ -207,8 +214,9 @@ class Commenter {
   String? _email;
   String? _text;
   String? _ts;
+  Users? _user;
 
-  Commenter({String? email, String? text, String? ts}) {
+  Commenter({String? email, String? text, String? ts, Users? user}) {
     if (email != null) {
       _email = email;
     }
@@ -217,6 +225,8 @@ class Commenter {
     }
     if (ts != null) {
       _ts = ts;
+    }   if (user != null) {
+      _user = user;
     }
   }
 
@@ -226,6 +236,8 @@ class Commenter {
   set text(String? text) => _text = text;
   String? get ts => _ts;
   set ts(String? ts) => _ts = ts;
+ Users? get user => _user;
+  set user(Users? user) => _user = user;
 
   Commenter.fromJson(Map<String, dynamic> json) {
     _email = json['email'];

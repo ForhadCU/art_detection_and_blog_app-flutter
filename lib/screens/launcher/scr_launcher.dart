@@ -2,7 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../controller/authentication_service.dart';
+import '../../controller/my_authentication_service.dart';
 import '../../utils/my_colors.dart';
 import '../../utils/my_screensize.dart';
 import '../landing/scr.landing.dart';

@@ -28,8 +28,10 @@ class MyWidget {
         )).show();
   }
 
-  static Widget vButtonProgressLoader({double? width, double? height, Color? color, String? labelText}) {
-    return  Row(
+  static Widget vButtonProgressLoader(
+      {double? width, double? height, Color? color, String? labelText}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
@@ -39,22 +41,18 @@ class MyWidget {
               color: color ?? Colors.white,
               strokeWidth: 2,
             )), // Customize the CircularProgressIndicator as needed
-      const  SizedBox(
+        const SizedBox(
             width:
                 8), // Add some spacing between the CircularProgressIndicator and text
         Text(
-         labelText ?? 'Loading',
+          labelText ?? 'Loading',
           style: TextStyle(color: color ?? Colors.white),
         ), // Replace with your desired text
       ],
     );
   }
 
-
-
-  static Widget vPostShimmering({required BuildContext context}){
-
-    
+  static Widget vPostShimmering({required BuildContext context}) {
     return GFShimmer(
         child: Container(
       margin: EdgeInsets.all(12),
@@ -102,13 +100,9 @@ class MyWidget {
         ],
       ),
     ));
-
-   
- 
   }
 
-   static Widget vPostPaginationShimmering({required BuildContext context}){
-    
+  static Widget vPostPaginationShimmering({required BuildContext context}) {
     return GFShimmer(
         child: Container(
       margin: EdgeInsets.all(12),
@@ -149,15 +143,196 @@ class MyWidget {
             height: 24,
           ),
           Container(
-              height: MyScreenSize.mGetHeight(context, 25),
+              height: MyScreenSize.mGetHeight(context, 10),
               width: MyScreenSize.mGetWidth(context, 80),
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle, color: Colors.black26)),
         ],
       ),
     ));
+  }
 
-   
- 
+  static vCommentShimmering({required BuildContext context}) {
+    return GFShimmer(
+        child: Container(
+      margin: EdgeInsets.all(12),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                  height: MyScreenSize.mGetHeight(context, 8),
+                  width: MyScreenSize.mGetWidth(context, 12),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.black26)),
+              SizedBox(
+                width: 24,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      height: MyScreenSize.mGetHeight(context, 3),
+                      width: MyScreenSize.mGetWidth(context, 60),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle, color: Colors.black26)),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    height: MyScreenSize.mGetHeight(context, 2),
+                    width: MyScreenSize.mGetWidth(context, 35),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle, color: Colors.black26),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Container(
+              height: MyScreenSize.mGetHeight(context, 10),
+              width: MyScreenSize.mGetWidth(context, 80),
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle, color: Colors.black26)),
+          SizedBox(
+            height: 36,
+          ),
+          Row(
+            children: [
+              Container(
+                  height: MyScreenSize.mGetHeight(context, 8),
+                  width: MyScreenSize.mGetWidth(context, 12),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.black26)),
+              SizedBox(
+                width: 24,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      height: MyScreenSize.mGetHeight(context, 3),
+                      width: MyScreenSize.mGetWidth(context, 60),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle, color: Colors.black26)),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    height: MyScreenSize.mGetHeight(context, 2),
+                    width: MyScreenSize.mGetWidth(context, 35),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle, color: Colors.black26),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Container(
+              height: MyScreenSize.mGetHeight(context, 10),
+              width: MyScreenSize.mGetWidth(context, 80),
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle, color: Colors.black26)),
+       SizedBox(
+            height: 36,
+          ),
+          Row(
+            children: [
+              Container(
+                  height: MyScreenSize.mGetHeight(context, 8),
+                  width: MyScreenSize.mGetWidth(context, 12),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.black26)),
+              SizedBox(
+                width: 24,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      height: MyScreenSize.mGetHeight(context, 3),
+                      width: MyScreenSize.mGetWidth(context, 60),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle, color: Colors.black26)),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    height: MyScreenSize.mGetHeight(context, 2),
+                    width: MyScreenSize.mGetWidth(context, 35),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle, color: Colors.black26),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Container(
+              height: MyScreenSize.mGetHeight(context, 10),
+              width: MyScreenSize.mGetWidth(context, 80),
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle, color: Colors.black26)),
+        ],
+      ),
+    ));
+  }
+
+  static vCommentPaginationShimmering({required BuildContext context}) {
+    return GFShimmer(
+        child: Container(
+      margin: EdgeInsets.all(12),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                  height: MyScreenSize.mGetHeight(context, 8),
+                  width: MyScreenSize.mGetWidth(context, 12),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.black26)),
+              SizedBox(
+                width: 24,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      height: MyScreenSize.mGetHeight(context, 3),
+                      width: MyScreenSize.mGetWidth(context, 60),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle, color: Colors.black26)),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    height: MyScreenSize.mGetHeight(context, 2),
+                    width: MyScreenSize.mGetWidth(context, 35),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle, color: Colors.black26),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Container(
+              height: MyScreenSize.mGetHeight(context, 6),
+              width: MyScreenSize.mGetWidth(context, 80),
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle, color: Colors.black26)),
+        ],
+      ),
+    ));
   }
 }

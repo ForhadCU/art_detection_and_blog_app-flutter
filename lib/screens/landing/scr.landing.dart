@@ -3,7 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/controller/authentication_service.dart';
+import 'package:flutter_application_1/const/keywords.dart';
+import 'package:flutter_application_1/controller/my_authentication_service.dart';
 import 'package:flutter_application_1/controller/firestore_service.dart';
 import 'package:flutter_application_1/models/model.post.dart';
 import 'package:flutter_application_1/screens/landing/pages/comments.dart';
@@ -43,16 +44,26 @@ class _LandingScreenState extends State<LandingScreen> {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   List<Post>? posts;
   late ScrollController _scrollController = ScrollController();
+  late CollectionReference _collectionReferencePOST;
+  late CollectionReference _collectionReferenceLIKER;
 
 // >>
   @override
   void initState() {
     super.initState();
     logger.d("I am Init");
+    _collectionReferencePOST = firebaseFirestore.collection(MyKeywords.POST);
+    _collectionReferenceLIKER = firebaseFirestore
+        .collection(MyKeywords.POST)
+        .doc()
+        .collection(MyKeywords.LIKER);
 
     mLoadData(); // c: Load latest 10 posts from firebase firestore
 
     mControlListViewSrolling(); // c: Post listView scroll listener for control pagination
+
+    mAddCollectionReferencePOSTListener();
+    mAddCollectionReferenceLIKERListener();
   }
 
   @override
@@ -147,18 +158,9 @@ class _LandingScreenState extends State<LandingScreen> {
           vDrawerHeader(),
           ListTile(
             title: const Text(
-              "Community Feeds",
+              "Art Guide",
             ),
-            leading: const Icon(Icons.share),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text(
-              "My Timeline",
-            ),
-            leading: const Icon(Icons.share),
+            leading: const Icon(Icons.newspaper),
             onTap: () {
               Navigator.pop(context);
             },
@@ -185,7 +187,7 @@ class _LandingScreenState extends State<LandingScreen> {
             title: const Text(
               "Sign out",
             ),
-            leading: const Icon(Icons.share),
+            leading: const Icon(Icons.arrow_back),
             onTap: () {
               mOnClickSignOut();
             },
@@ -199,13 +201,15 @@ class _LandingScreenState extends State<LandingScreen> {
     return UserAccountsDrawerHeader(
       decoration: const BoxDecoration(color: MyColors.secondColor),
       accountName: Text(
-        _userName,
+        widget.user.displayName == null ? "User" : widget.user.displayName!,
       ),
       accountEmail: Text(
-        _userEmail,
+        widget.user.email!,
       ),
-      currentAccountPicture: const CircleAvatar(
-        child: Image(image: AssetImage("assets/images/user.png")),
+      currentAccountPicture: CircleAvatar(
+        child: widget.user.photoURL != null
+            ? Image(image: NetworkImage(widget.user.photoURL!))
+            : Image(image: AssetImage("assets/images/user.png")),
       ),
     );
   }
@@ -234,19 +238,18 @@ class _LandingScreenState extends State<LandingScreen> {
                 });
 
                 setState(() {
-              _isDataLoading = true;
-            });
-            await MyFirestoreService.mFetchInitialPost(
-                    firebaseFirestore: firebaseFirestore,
-                    category: "all category")
-                .then((value) {
-              posts!.clear;
-              setState(() {
-                posts = value;
-                _isDataLoading = false;
-              });
-            });
-
+                  _isDataLoading = true;
+                });
+                await MyFirestoreService.mFetchInitialPost(
+                        firebaseFirestore: firebaseFirestore,
+                        category: "all category")
+                    .then((value) {
+                  posts!.clear;
+                  setState(() {
+                    posts = value;
+                    _isDataLoading = false;
+                  });
+                });
               }
             });
           });
@@ -387,44 +390,51 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Widget vLikeButton(Post post) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        GFAvatar(
-          backgroundColor: Colors.black12 /* GFColors.PRIMARY */,
-          size: GFSize.SMALL,
-          child: Icon(
-            Icons.favorite_outline,
-            color: MyColors.secondColor,
+    return InkWell(
+      onTap: () async {
+        mOnClickLikeButton(post);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GFAvatar(
+            backgroundColor: post.likeStatus!
+                ? Colors.deepOrange
+                : Colors.black12 /* GFColors.PRIMARY */,
+            size: GFSize.SMALL,
+            child: Icon(
+              Icons.favorite_outline,
+              color: post.likeStatus! ? Colors.white : MyColors.secondColor,
+            ),
           ),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Text(
-          "Likes",
-          style: TextStyle(color: Colors.black54),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        post.numOfLikes == null
-            ? Text(
-                "0",
-                style: TextStyle(color: Colors.black54),
-              )
-            : Text(
-                "${post.numOfLikes}",
-                style: TextStyle(color: Colors.black54),
-              )
-      ],
+          SizedBox(
+            height: 4,
+          ),
+          Text(
+            "Likes",
+            style: TextStyle(color: Colors.black54),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          post.numOfLikes == null
+              ? Text(
+                  "0",
+                  style: TextStyle(color: Colors.black54),
+                )
+              : Text(
+                  "${post.numOfLikes}",
+                  style: TextStyle(color: Colors.black54),
+                )
+        ],
+      ),
     );
   }
 
   Widget vCommentButton(Post post) {
     return InkWell(
       onTap: () {
-        mOnClickCommentButton();
+        mOnClickCommentButton(post);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -461,9 +471,11 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  void mOnClickCommentButton() {
+  void mOnClickCommentButton(Post post) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return CommentsPage();
+      return CommentsPage(
+        post: post,
+      );
     }));
   }
 
@@ -477,17 +489,7 @@ class _LandingScreenState extends State<LandingScreen> {
         _isDataLoading
             ? MyWidget.vPostShimmering(context: context)
             : posts == null || posts!.isEmpty
-                ? Expanded(
-                  child: Center(
-                      child: Text(
-                        "No result found.",
-                        style: TextStyle(
-                            color: Colors.black45,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                )
+                ? vNoResultFound()
                 : vPostList(),
       ],
     );
@@ -514,6 +516,9 @@ class _LandingScreenState extends State<LandingScreen> {
         .then((value) {
       setState(() {
         posts = value;
+        /*  int i = posts!
+            .indexWhere((element) => element.postId == "C71CC8DQdedbivs0kbXD");
+        logger.d("Index is: $i"); */
         _isDataLoading = false;
       });
     });
@@ -572,5 +577,84 @@ class _LandingScreenState extends State<LandingScreen> {
         logger.w("No Data exist");
       }
     });
+  }
+
+  Future<void> mOnClickLikeButton(Post post) async {
+    await MyFirestoreService.mStoreLikeData(
+            firebaseFirestore: firebaseFirestore,
+            email: post.email!,
+            postId: post.postId!)
+        .then((like) {
+      if (like != null) {
+        if (like) {
+          // c: like
+          logger.w("Like");
+          posts![posts!.indexOf(post)].likeStatus = true;
+        } else {
+          // c: unlike
+          logger.w("UnLike");
+          posts![posts!.indexOf(post)].likeStatus = false;
+        }
+        // c: refresh
+        setState(() {});
+      }
+    });
+  }
+
+  void mAddCollectionReferencePOSTListener() {
+    _collectionReferencePOST.snapshots().listen((snapshot) {
+      for (var docChange in snapshot.docChanges) {
+        //c: Handle each change type
+        if (docChange.type == DocumentChangeType.added) {
+          logger.w("ADDED new item id: ${docChange.doc.id}");
+        } else if (docChange.type == DocumentChangeType.modified) {
+          logger.w("MODIFIED Post at ${docChange.doc.id}");
+          var modifiedDocId = docChange.doc.id;
+          int i =
+              posts!.indexWhere((element) => element.postId == modifiedDocId);
+          mUpdatePostData(docChange.doc, i);
+          setState(() {});
+          // logger.d("Index is: $i");
+        }
+      }
+    });
+  }
+
+  void mAddCollectionReferenceLIKERListener() {
+    _collectionReferenceLIKER.snapshots().listen((snapshot) {
+      for (var docChange in snapshot.docChanges) {
+        //c: Handle each change type
+        if (docChange.type == DocumentChangeType.added) {
+          logger.w("ADDED one item ${docChange.newIndex}");
+        } else if (docChange.type == DocumentChangeType.modified) {
+          setState(() {
+            logger
+                .w("MODIFIED one item ${docChange.doc.get(MyKeywords.email)}");
+          });
+        } else if (docChange.type == DocumentChangeType.removed) {
+          setState(() {
+            logger
+                .w("REMOVED one item: ${docChange.doc.get(MyKeywords.email)}");
+          });
+        }
+      }
+    });
+  }
+
+  void mUpdatePostData(DocumentSnapshot<Object?> doc, int i) {
+    posts![i].numOfLikes = doc.get(MyKeywords.num_of_likes);
+    posts![i].numOfComments = doc.get(MyKeywords.num_of_comments);
+  }
+
+  Widget vNoResultFound() {
+    return Expanded(
+      child: Center(
+        child: Text(
+          "No result found.",
+          style: TextStyle(
+              color: Colors.black45, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }

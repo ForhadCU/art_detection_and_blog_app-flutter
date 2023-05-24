@@ -1,12 +1,13 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sort_child_properties_last
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/my_date_format.dart';
 import 'package:logger/logger.dart';
 
-import '../../controller/authentication_service.dart';
+import '../../controller/my_authentication_service.dart';
 import '../../controller/firestore_service.dart';
 import '../../controller/my_services.dart';
 import '../../models/model.user.dart';
@@ -196,7 +197,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _vSignupButton() {
-    return TextButton(
+    return ElevatedButton(
         onPressed: () {
           setState(() {
             isLoading = true;
@@ -213,20 +214,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               )
-            : SizedBox(
-                height: MyScreenSize.mGetHeight(context, 8),
-                width: MyScreenSize.mGetWidth(context, 8),
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 1,
-                ),
-              ),
-        style: TextButton.styleFrom(
-            fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
-                MyScreenSize.mGetHeight(context, 6)),
+            : MyWidget.vButtonProgressLoader(labelText: "Signing up..."),
+        style: ElevatedButton.styleFrom(
+            /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
+                MyScreenSize.mGetHeight(context, 7)), */
             backgroundColor: MyColors.firstColor,
             // backgroundColor: const Color(0xFF2697FF),
-            padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 80),
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0))));
   }
@@ -604,35 +598,53 @@ class _SignupScreenState extends State<SignupScreen> {
             // c: proceed to signup
             UserCredential? userCredential =
                 await MyAuthenticationService.mSignUp(
-                    firebaseAuth: firebaseAuth,
-                    email: emailController.value.text,
-                    password: passwordController.value.text);
-            if (userCredential != null) {
-              User user = userCredential.user!;
-              // c: create a users object
-              Users users = Users(
-                  uid: user.uid,
-                  email: user.email,
-                  username: usernameController.value.text,
-                  phone: phoneController.value.text,
-                  dob: dobController.value.text,
-                  ts: DateTime.now().millisecondsSinceEpoch.toString());
-              // c: store the users data in to Firestore
-              await MyFirestoreService.mStoreUserCredential(
-                  firebaseFirestore: firebaseFirestore, user: users);
+                        firebaseAuth: firebaseAuth,
+                        email: emailController.value.text,
+                        password: passwordController.value.text)
+                    .then((UserCredential? userCredential) async {
+              if (userCredential != null) {
+                User user = userCredential.user!;
+                // c: create a users object
+                Users users = Users(
+                    uid: user.uid,
+                    email: user.email,
+                    username: usernameController.value.text,
+                    phone: phoneController.value.text,
+                    dob: dobController.value.text,
+                    ts: DateTime.now().millisecondsSinceEpoch.toString());
+                // c: store the users data in to Firestore
+                await MyFirestoreService.mStoreUserCredential(
+                    firebaseFirestore: firebaseFirestore, user: users);
 
-              Future.delayed(Duration(milliseconds: 1)).then((value) {
-                MyWidget.vShowWarnigDialog(
-                        context: context,
-                        message: "Email verification has been sent",
-                        buttonText: "Check email")
-                    .then((value) async => {
-                          await MyServices.mLaunchGmailInbox(
-                              email: user.email!),
-                          MyServices.mExitApp()
-                        });
-              });
-            }
+                Future.delayed(Duration(milliseconds: 1)).then((value) {
+                  MyWidget.vShowWarnigDialog(
+                          context: context,
+                          message: "Email verification has been sent",
+                          buttonText: "Check email")
+                      .then((value) async => {
+                            await MyServices.mLaunchGmailInbox(
+                                email: user.email!),
+                            MyServices.mExitApp()
+                          });
+                });
+              } else{
+                 AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.warning,
+                  title: "Sign up error",
+                  btnOk: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        fixedSize:
+                            Size(400, MyScreenSize.mGetHeight(context, 1)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4)),
+                    child: Text("Dismiss"),
+                  )).show();
+              }
+            });
           } else {
             await Future.delayed((const Duration(milliseconds: 1)))
                 .then((value) {
