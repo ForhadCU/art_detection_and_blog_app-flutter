@@ -66,6 +66,7 @@ dependencies:
   tflite: null
   thumbnailer: ^2.1.0
   url_launcher: ^6.1.11
+  youtube_player_flutter: ^8.1.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -87,6 +88,7 @@ flutter:
     - assets/images/
     - assets/animations/
     - assets/fitness_app/
+    - assets/json_data/
     # - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

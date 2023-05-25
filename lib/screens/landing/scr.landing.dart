@@ -7,6 +7,7 @@ import 'package:flutter_application_1/const/keywords.dart';
 import 'package:flutter_application_1/controller/my_authentication_service.dart';
 import 'package:flutter_application_1/controller/firestore_service.dart';
 import 'package:flutter_application_1/models/model.post.dart';
+import 'package:flutter_application_1/screens/art%20guide/scr.art_guide.dart';
 import 'package:flutter_application_1/screens/landing/pages/comments.dart';
 import 'package:flutter_application_1/screens/profile/scr_profile.dart';
 import 'package:flutter_application_1/screens/signin/scr_signin.dart';
@@ -74,7 +75,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    logger.d("I am build");
+    logger.v("Build: Landing Screen");
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -163,6 +164,9 @@ class _LandingScreenState extends State<LandingScreen> {
             leading: const Icon(Icons.newspaper),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ArtGuideScreen();
+              }));
             },
           ),
           ListTile(

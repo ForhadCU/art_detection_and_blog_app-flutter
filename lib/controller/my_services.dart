@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:path/path.dart' as Path;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../const/keywords.dart';
+import '../models/model.art_guide.dart';
 import '../models/model.image_details.dart';
 import '../utils/my_date_format.dart';
 import '../utils/my_image_utility.dart';
@@ -134,5 +136,22 @@ class MyServices {
     SystemNavigator.pop();
   }
 
-  // m: FIREBASE OPERATION
+  static Future<String> mLoadArtGuideJsonData() async {
+    String data = "";
+    await rootBundle
+        .loadString("assets/json_data/art_guide.json")
+        .then((value) {
+      return data = value;
+    }).onError((error, stackTrace) {
+      logger.e(stackTrace);
+      return data;
+    });
+    return data;
+  }
+
+static  Future<List<ArtGuide>> mParseJsonData() async {
+  String jsonData = await mLoadArtGuideJsonData();
+  List<dynamic> data = json.decode(jsonData);
+  return data.map((item) => ArtGuide.fromJson(item)).toList();
+}
 }
