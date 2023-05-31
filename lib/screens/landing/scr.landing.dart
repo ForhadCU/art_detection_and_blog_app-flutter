@@ -31,6 +31,7 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
+
   final String _userName = "user_0012001";
   final String _imgCategory = "all category";
   final String _userEmail = "user_0012001@gmail.com";
@@ -361,13 +362,13 @@ class _LandingScreenState extends State<LandingScreen> {
       boxFit: BoxFit.cover,
       titlePosition: GFPosition.start,
       // e: test
-      /* image: Image.network(
+      image: Image.network(
         post.imgUri!,
         fit: BoxFit.cover,
-      ), */
+      ),
       // e: test
       // showImage: true,
-      showImage: false,
+      showImage: true,
       title: GFListTile(
         margin: EdgeInsets.only(bottom: 6),
         shadow: BoxShadow(color: Colors.white),
@@ -378,7 +379,7 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
         // e: test
         // titleText: post.users!.username,
-        titleText: post.postId,
+        titleText: post.users!.username,
         subTitleText: mFormatDateTime(post),
       ),
       content: vCatAndCap(post),

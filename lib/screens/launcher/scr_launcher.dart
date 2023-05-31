@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,15 +24,7 @@ class _LauncherPageState extends State<LauncherPage> {
     // SystemChrome.setSystemUIOverlayStyle(style)
     firebaseAuth = FirebaseAuth.instance;
 
-    User? user = MyAuthenticationService.mCheckUserSignInStatus(
-        firebaseAuth: firebaseAuth);
-    Future.delayed(const Duration(milliseconds: 3000)).then((value) {
-      if (user != null) {
-        mGoForward(user);
-      } else {
-        mGoSignIn();
-      }
-    });
+    mCheckUserLoggedInStatus();
   }
 
   @override
@@ -42,7 +35,8 @@ class _LauncherPageState extends State<LauncherPage> {
       width: MyScreenSize.mGetWidth(context, 100),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        color: Colors.white,
+        /*    gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           stops: const [0.1, 0.4, 0.7, 0.9],
@@ -52,24 +46,25 @@ class _LauncherPageState extends State<LauncherPage> {
             MyColors.firstColor,
             MyColors.firstColor
           ],
-        ),
+        ), */
       ),
       child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
+          /*  SizedBox(
               width: 24,
               height: 24,
               child: CircularProgressIndicator(
                 color: Colors.white30,
                 strokeWidth: 2,
-              )),
+              )), */
+          Image(image: AssetImage("assets/animations/launcher2.gif")),
           SizedBox(
-            height: 6,
+            height: 12,
           ),
           Text(
-            "App is starting...",
-            style: TextStyle(color: Colors.white30),
+            "App Name Goes Here",
+            style: TextStyle(color: MyColors.firstColor, fontSize: 24, fontWeight: FontWeight.w800),
           )
         ],
       ),
@@ -86,5 +81,16 @@ class _LauncherPageState extends State<LauncherPage> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
       return const LoginScreen();
     }));
+  }
+
+  void mCheckUserLoggedInStatus() async {
+    User? user = MyAuthenticationService.mCheckUserSignInStatus(
+        firebaseAuth: firebaseAuth);
+    await Future.delayed(const Duration(milliseconds: 8000));
+      if (user != null) {
+        mGoForward(user);
+      } else {
+        mGoSignIn();
+      }
   }
 }
