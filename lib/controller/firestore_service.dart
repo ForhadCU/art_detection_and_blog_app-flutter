@@ -13,7 +13,6 @@ import '../models/model.user.dart';
 Logger logger = Logger();
 
 class MyFirestoreService {
-  
   static void mAddBabyGalleryDataToFirestore(
       {required String email,
       String? caption,
@@ -44,7 +43,7 @@ class MyFirestoreService {
 
   static Future<bool> mStoreUserCredential(
       {required FirebaseFirestore firebaseFirestore,
-      required Users user}) async {
+      required UserData user}) async {
     try {
       await firebaseFirestore
           .collection(MyKeywords.USER)
@@ -446,6 +445,45 @@ class MyFirestoreService {
     return isLiked;
   }
 
+  static Future<bool> mRemoveMyPost(
+      {required FirebaseFirestore firebaseFirestore,
+      required UserData user,
+      required String postId}) async {
+    bool isSuccess = false;
+    CollectionReference collectionRef =
+        firebaseFirestore.collection(MyKeywords.POST);
+
+    await collectionRef.doc(postId).delete().then((value) {
+      isSuccess = true;
+      logger.w("Deleted");
+    }).onError((error, stackTrace) {
+      logger.e(error);
+    });
+
+    return isSuccess;
+  }
+
+  static Future<UserData?> mUpdateUserData(
+      {required FirebaseFirestore firebaseFirestore,
+      required UserData userData}) async {
+    UserData? newUser;
+    await firebaseFirestore
+        .collection(MyKeywords.USER)
+        .doc(userData.email)
+        .update(userData.toJson())
+        .then((value) async {
+      await mFetchUserData(
+              firebaseFirestore: firebaseFirestore, email: userData.email!)
+          .then((value) {
+        value != null ? {newUser = value} : null;
+      });
+    }).onError((error, stackTrace) {
+      logger.e(error);
+    });
+
+    return newUser;
+  }
+
   static Future<Post?> mCreateObject(FirebaseFirestore firebaseFirestore,
       QueryDocumentSnapshot<Object?> element) async {
     Post? post;
@@ -457,7 +495,7 @@ class MyFirestoreService {
         .doc(element.get(MyKeywords.email))
         .get()
         .then((value) {
-      Users user = Users(username: value.get(MyKeywords.username));
+      UserData user = UserData(username: value.get(MyKeywords.username));
       post = Post(
           postId: element.id,
           email: element.get(MyKeywords.email),
@@ -500,11 +538,69 @@ class MyFirestoreService {
     return isSuccess;
   }
 
-  static Future<Users?> mFetchUserData({
+  static Future<List<Post>> mFetchMyPosts(
+      {required FirebaseFirestore firebaseFirestore,
+      required String category,
+      required UserData user}) async {
+    CollectionReference collectionRef =
+        firebaseFirestore.collection(MyKeywords.POST);
+    int itemsPerpage = 5;
+    List<Post> posts = [];
+
+    if (category.contains("all category")) {
+      // fetch allorderBy(MyKeywords.ts, descending: true).get()
+      await collectionRef
+          .orderBy(MyKeywords.ts, descending: true)
+          .limit(itemsPerpage)
+          .get()
+          .then((querySnapshot) async {
+        logger.w("Post Loaded");
+
+        for (var element in querySnapshot.docs) {
+          // m: Create post object for each postData (element)
+          if (element.get(MyKeywords.email) == user.email) {
+            Post? post = await mCreateObject(firebaseFirestore, element);
+            if (post != null) {
+              posts.add(post);
+            }
+          }
+        }
+      }).onError((error, stackTrace) {
+        logger.e(error);
+      });
+    } else {
+      logger.d("Fetching post by category");
+      // fetch by cat
+      await collectionRef
+          .orderBy(MyKeywords.ts, descending: true)
+          .limit(itemsPerpage)
+          .where(MyKeywords.category, isEqualTo: mFormatedCategory(category))
+          .get()
+          .then((querySnapshot) async {
+        logger.w("Post Loaded");
+
+        for (var element in querySnapshot.docs) {
+          // m: Create post object for each postData (element)
+          Post? post = await mCreateObject(firebaseFirestore, element);
+          if (post != null) {
+            posts.add(post);
+          }
+        }
+
+        // logger.d("Uploaded post length: ${posts.length}");
+      }).onError((error, stackTrace) {
+        logger.e(error);
+      });
+    }
+
+    return posts;
+  }
+
+  static Future<UserData?> mFetchUserData({
     required FirebaseFirestore firebaseFirestore,
     required String email,
   }) async {
-    Users? user;
+    UserData? user;
 
     await firebaseFirestore
         .collection(MyKeywords.USER)
@@ -512,7 +608,7 @@ class MyFirestoreService {
         .get()
         .then((value) {
       if (value.exists) {
-        user = Users.fromJson(value.data()!);
+        user = UserData.fromJson(value.data()!);
       }
     }).onError((error, stackTrace) {
       logger.e(error);

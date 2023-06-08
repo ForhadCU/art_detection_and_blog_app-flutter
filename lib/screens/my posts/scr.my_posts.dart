@@ -20,19 +20,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/my_colors.dart';
 import '../../utils/my_screensize.dart';
-import 'widgets/bottom_nav.dart';
-import 'widgets/my_bottom_sheet.dart';
+import '../landing/widgets/bottom_nav.dart';
+import '../landing/widgets/my_bottom_sheet.dart';
 
-class LandingScreen extends StatefulWidget {
+class MyPostScreen extends StatefulWidget {
   final UserData userData;
-  const LandingScreen({super.key, required this.userData});
+  const MyPostScreen({super.key, required this.userData});
 
   @override
-  State<LandingScreen> createState() => _LandingScreenState();
+  State<MyPostScreen> createState() => _MyPostScreenState();
 }
 
-class _LandingScreenState extends State<LandingScreen> {
-  
+class _MyPostScreenState extends State<MyPostScreen> {
   final String _userName = "user_0012001";
   final String _imgCategory = "all category";
   final String _userEmail = "user_0012001@gmail.com";
@@ -81,187 +80,15 @@ class _LandingScreenState extends State<LandingScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          backgroundColor: MyColors.secondColor,
+          title: Text(
+            "My Posts",
+            style: TextStyle(color: MyColors.secondColor),
+          ),
+          iconTheme: const IconThemeData(color: MyColors.secondColor),
+          backgroundColor: Colors.white,
           elevation: 0,
-          actions: [
-            // vActionItems(),
-          ],
         ),
-        drawer: Drawer(
-            width: MyScreenSize.mGetWidth(context, 70), child: vDrawerItems()),
-        floatingActionButton: FloatingActionButton(
-          shape: const CircleBorder(),
-          backgroundColor: MyColors.firstColor,
-          onPressed: () {
-            mShowBottomSheet();
-          },
-          child: const Icon(
-            Icons.upload,
-            color: MyColors.fourthColor,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: HomeBottomNavBar(
-          pageIndex: _pageIndex,
-          fabLocation: FloatingActionButtonLocation.centerDocked,
-          shape: const CircularNotchedRectangle(),
-          callback: (int pageIndex) {
-            setState(() {
-              _pageIndex = pageIndex;
-            });
-          },
-        ),
-        body: _pageIndex == 0
-            ? vHome()
-            : _pageIndex == 1
-                ? ProfilePage(
-                    userData: widget.userData,
-                  )
-                : null);
-  }
-
-  Widget vActionItems() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          _userName,
-          style: const TextStyle(color: MyColors.secondColor),
-        ),
-        const SizedBox(
-          width: 12,
-        ),
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: MyColors.secondColor,
-                width: .8,
-              )),
-          child: const CircleAvatar(
-            backgroundImage: AssetImage(
-              "assets/images/user.png",
-            ),
-          ),
-        ),
-        const SizedBox(
-          width: 24,
-        )
-      ],
-    );
-  }
-
-  Widget vDrawerItems() {
-    return Container(
-      color: Colors.white,
-      // width: MyScreenSize.mGetWidth(context, 60),
-      child: ListView(
-        children: [
-          vDrawerHeader(),
-          ListTile(
-            title: const Text(
-              "Art Guide",
-            ),
-            leading: const Icon(Icons.newspaper),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ArtGuideScreen();
-              }));
-            },
-          ),
-          ListTile(
-            title: const Text(
-              "Share",
-            ),
-            leading: const Icon(Icons.share),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text(
-              "Feedback",
-            ),
-            leading: const Icon(Icons.feedback),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text(
-              "Sign out",
-            ),
-            leading: const Icon(Icons.arrow_back),
-            onTap: () {
-              mOnClickSignOut();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget vDrawerHeader() {
-    return UserAccountsDrawerHeader(
-      decoration: const BoxDecoration(color: MyColors.secondColor),
-      accountName: Text(
-        widget.userData.username == null ? "User" : widget.userData.username!,
-      ),
-      accountEmail: Text(
-        widget.userData.email!,
-      ),
-      currentAccountPicture: CircleAvatar(
-        child: widget.userData.imgUri != null
-            ? Image(image: NetworkImage(widget.userData.imgUri!))
-            : Image(image: AssetImage("assets/images/user.png")),
-      ),
-    );
-  }
-
-  mShowBottomSheet() {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return MyBottomSheet(callback:
-              (String imgUri, String imgCategory, String caption) async {
-            Post post = Post(
-                email: widget.userData.email,
-                caption: caption,
-                imgUri: imgUri,
-                category: imgCategory,
-                ts: DateTime.now().millisecondsSinceEpoch.toString());
-
-            await MyFirestoreService.mUploadPost(
-                    firebaseFirestore: firebaseFirestore, post: post)
-                .then((value) async {
-              if (value) {
-                await Future.delayed(const Duration(milliseconds: 3000))
-                    .then((value) {
-                  // c: dismiss bottomSheet
-                  Navigator.pop(context);
-                });
-
-                setState(() {
-                  _isDataLoading = true;
-                });
-                await MyFirestoreService.mFetchInitialPost(
-                        firebaseFirestore: firebaseFirestore,
-                        category: "all category")
-                    .then((value) {
-                  posts!.clear;
-                  setState(() {
-                    posts = value;
-                    _isDataLoading = false;
-                  });
-                });
-              }
-            });
-          });
-        });
+        body: vHome());
   }
 
   Widget vPostList() {
@@ -270,63 +97,9 @@ class _LandingScreenState extends State<LandingScreen> {
         itemCount: posts!.length + 1,
         itemBuilder: ((context, index) {
           return index < posts!.length
-              ? index == 0
-                  ? Padding(
-                      padding: EdgeInsets.only(
-                          top: MyScreenSize.mGetHeight(context, 11)),
-                      child: vItem(index),
-                    )
-                  : vItem(index)
+              ? vItem(index)
               : MyWidget.vPostPaginationShimmering(context: context);
         }));
-  }
-
-  Widget vCategoryDropdown() {
-    return Container(
-      height: MyScreenSize.mGetHeight(context, 6),
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(bottom: 8, left: 12, right: 12),
-      child: DropdownButtonHideUnderline(
-        child: GFDropdown(
-          isExpanded: true,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          borderRadius: BorderRadius.circular(5),
-          border: const BorderSide(color: Colors.black12, width: 1),
-          dropdownButtonColor: Colors.white,
-          value: _dropDownValue,
-          onChanged: (newValue) async {
-            _dropDownValue = newValue!;
-            setState(() {
-              _isDataLoading = true;
-            });
-            await MyFirestoreService.mFetchInitialPost(
-                    firebaseFirestore: firebaseFirestore,
-                    category: _dropDownValue)
-                .then((value) {
-              posts!.clear;
-              setState(() {
-                posts = value;
-                _isDataLoading = false;
-                logger.d("Clicked: $newValue");
-              });
-            });
-          },
-          items: [
-            'All Category',
-            'Drawings',
-            'Engraving',
-            'Iconography',
-            'Painting',
-            'Sculpture'
-          ]
-              .map((value) => DropdownMenuItem(
-                    value: value,
-                    child: Text(value),
-                  ))
-              .toList(),
-        ),
-      ),
-    );
   }
 
   Widget vCatAndCap(Post post) {
@@ -364,8 +137,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget vItem(int index) {
     Post post = posts![index];
     return GFCard(
-      // color: MyColors.thirdColor.withOpacity(0.8),
-
+      // color: Colors.white,
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 5,
       boxFit: BoxFit.cover,
@@ -394,8 +166,7 @@ class _LandingScreenState extends State<LandingScreen> {
         children: <Widget>[
           vLikeButton(post),
           vCommentButton(post),
-          vRatingButton(post)
-          ,
+          vRemoveButton(post, index),
         ],
       ),
     );
@@ -494,8 +265,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget vHome() {
     return Stack(children: [
       vHomeBody(),
-      vCurvedHeader(),
-      vCategoryDropdown(),
+      // vCurvedHeader(),
     ]);
   }
 
@@ -515,8 +285,10 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void mLoadData() async {
     logger.d("Loading post...");
-    MyFirestoreService.mFetchInitialPost(
-            firebaseFirestore: firebaseFirestore, category: _imgCategory)
+    MyFirestoreService.mFetchMyPosts(
+            firebaseFirestore: firebaseFirestore,
+            category: _imgCategory,
+            user: widget.userData)
         .then((value) {
       setState(() {
         posts = value;
@@ -685,54 +457,45 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   vPostShimmering() {
-   return Padding(
-        padding: EdgeInsets.only(top: MyScreenSize.mGetHeight(context, 11)),
-        child: MyWidget.vPostShimmering(context: context));
+    return MyWidget.vPostShimmering(context: context);
   }
-  
-  vRatingButton(Post post) {
 
+  vRemoveButton(Post post, int index) {
     return InkWell(
       onTap: () async {
-        mOnClickRatingButton(post);
+        // m: Call delete method
+        await MyFirestoreService.mRemoveMyPost(
+                firebaseFirestore: firebaseFirestore,
+                user: widget.userData,
+                postId: post.postId!)
+            .then((value) {
+          if (value) {
+            setState(() {
+              posts!.removeAt(index);
+            });
+          }
+        });
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           GFAvatar(
-            backgroundColor: post.likeStatus!
-                ? Colors.deepOrange
-                : Colors.black12 /* GFColors.PRIMARY */,
+            backgroundColor: Colors.black12 /* GFColors.PRIMARY */,
             size: GFSize.SMALL,
             child: Icon(
-              Icons.star_border,
-              color: post.likeStatus! ? Colors.white : MyColors.secondColor,
+              Icons.delete_forever_outlined,
+              color: Colors.black45,
             ),
           ),
           SizedBox(
             height: 4,
           ),
           Text(
-            "Ratings",
+            "Remove",
             style: TextStyle(color: Colors.black54),
           ),
-          SizedBox(
-            height: 4,
-          ),
-          post.numOfLikes == null
-              ? Text(
-                  "0",
-                  style: TextStyle(color: Colors.black54),
-                )
-              : Text(
-                  "${post.numOfLikes}",
-                  style: TextStyle(color: Colors.black54),
-                )
         ],
       ),
     );
- 
   }
-  
-  void mOnClickRatingButton(Post post) {}
 }

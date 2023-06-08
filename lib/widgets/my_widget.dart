@@ -4,6 +4,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
+import '../utils/my_colors.dart';
 import '../utils/my_screensize.dart';
 
 class MyWidget {
@@ -239,7 +240,7 @@ class MyWidget {
               width: MyScreenSize.mGetWidth(context, 80),
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle, color: Colors.black26)),
-       SizedBox(
+          SizedBox(
             height: 36,
           ),
           Row(
@@ -335,4 +336,42 @@ class MyWidget {
       ),
     ));
   }
+}
+
+class HeaderCurvedContainerForProfile extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..color = MyColors.secondColor;
+    Path path = Path()
+      ..relativeLineTo(0, 100)
+      ..quadraticBezierTo(size.width / 2, 150, size.width, 50)
+      ..relativeLineTo(0, -100)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class HeaderCurvedContainerForHome extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..color = MyColors.secondColor;
+    Path path = Path()
+      ..relativeLineTo(0, 50)
+      ..quadraticBezierTo(
+          size.width / 2,
+          // bottom-center coltrol
+          80,
+          size.width,
+          // bottom-right
+          50)
+      ..relativeLineTo(0, -50)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

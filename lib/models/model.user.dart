@@ -1,4 +1,4 @@
-class Users {
+class UserData {
   String? _uid;
   String? _email;
   String? _username;
@@ -10,7 +10,7 @@ class Users {
   String? _imgUri;
   String? _ts;
 
-  Users(
+  UserData(
       {String? uid,
       String? email,
       String? username,
@@ -74,7 +74,7 @@ class Users {
   String? get ts => _ts;
   set ts(String? ts) => _ts = ts;
 
-  Users.fromJson(Map<String, dynamic> json) {
+  UserData.fromJson(Map<String, dynamic> json) {
     _uid = json['uid'];
     _email = json['email'];
     _username = json['username'];

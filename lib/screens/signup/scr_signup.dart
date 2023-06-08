@@ -605,7 +605,7 @@ class _SignupScreenState extends State<SignupScreen> {
               if (userCredential != null) {
                 User user = userCredential.user!;
                 // c: create a users object
-                Users users = Users(
+                UserData users = UserData(
                     uid: user.uid,
                     email: user.email,
                     username: usernameController.value.text,
@@ -627,22 +627,22 @@ class _SignupScreenState extends State<SignupScreen> {
                             MyServices.mExitApp()
                           });
                 });
-              } else{
-                 AwesomeDialog(
-                  context: context,
-                  dialogType: DialogType.warning,
-                  title: "Sign up error",
-                  btnOk: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        fixedSize:
-                            Size(400, MyScreenSize.mGetHeight(context, 1)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4)),
-                    child: Text("Dismiss"),
-                  )).show();
+              } else {
+                AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.warning,
+                    title: "Sign up error",
+                    btnOk: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          fixedSize:
+                              Size(400, MyScreenSize.mGetHeight(context, 1)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4)),
+                      child: Text("Dismiss"),
+                    )).show();
               }
             });
           } else {

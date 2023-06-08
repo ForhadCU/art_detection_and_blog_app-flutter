@@ -1,13 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields
 
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/model.post.dart';
 import 'package:flutter_application_1/widgets/my_widget.dart';
 import 'package:logger/logger.dart';
 import 'package:tflite/tflite.dart';

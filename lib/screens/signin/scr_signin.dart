@@ -1,9 +1,11 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../controller/firestore_service.dart';
 import '../../controller/my_authentication_service.dart';
 import '../../controller/my_services.dart';
+import '../../models/model.user.dart';
 import '../../utils/my_colors.dart';
 import '../../utils/my_screensize.dart';
 import '../../widgets/my_widget.dart';
@@ -44,8 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
     User? user = MyAuthenticationService.mCheckUserSignInStatus(
         firebaseAuth: firebaseAuth);
     if (user != null) {
-      mGoNextPage(user);
-    } 
+      mLoadUserData(user);
+    }
   }
 
   @override
@@ -132,9 +134,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void mGoNextPage(User user) {
+  void mGoNextPage(User user, UserData userData) {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      return LandingScreen(user: user);
+      return LandingScreen(userData: userData);
     }));
   }
 
@@ -255,13 +257,13 @@ class _LoginScreenState extends State<LoginScreen> {
         mSignInProcess();
       },
       style: ElevatedButton.styleFrom(
-          fixedSize: Size(MyScreenSize.mGetWidth(context, 60), 50),
+          fixedSize: Size(MyScreenSize.mGetWidth(context, 60), 40),
           backgroundColor: MyColors.firstColor,
           padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 24),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0))),
       child: isLoading
-          ? MyWidget.vButtonProgressLoader()
+          ? MyWidget.vButtonProgressLoader(labelText: "Singing...")
           : const Text(
               "Login",
               style: TextStyle(
@@ -331,8 +333,18 @@ class _LoginScreenState extends State<LoginScreen> {
         bool isVerified = MyAuthenticationService.mCheckUserVerified(
             firebaseAuth: firebaseAuth, user: user);
         if (isVerified) {
-          // c: Go to Landing Screen
-          mGoForward(user);
+          // m: get User data
+          await MyFirestoreService.mFetchUserData(
+                  firebaseFirestore: FirebaseFirestore.instance,
+                  email: user.email!)
+              .then((value) {
+            value != null
+                ? {
+                    // c: Go to Landing Screen
+                    mGoForward(user, value)
+                  }
+                : null;
+          });
         } else {
           Future.delayed(const Duration(milliseconds: 1)).then((value) {
             MyWidget.vShowWarnigDialog(
@@ -367,9 +379,21 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void mGoForward(User user) {
+  void mGoForward(User user, UserData userData) {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      return LandingScreen(user: user);
+      return LandingScreen(
+        userData: userData,
+      );
     }));
+  }
+
+  void mLoadUserData(User user) async {
+    await MyFirestoreService.mFetchUserData(
+            firebaseFirestore: FirebaseFirestore.instance, email: user.email!)
+        .then((value) {
+      if (value != null) {
+        mGoForward(user, value);
+      }
+    });
   }
 }
