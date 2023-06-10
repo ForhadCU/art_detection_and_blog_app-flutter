@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields
-
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -85,7 +83,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
           Container(
             color: MyColors.firstColor,
             height: MyScreenSize.mGetHeight(context, 8),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomText(
@@ -98,7 +96,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
             ),
           ),
           _isModelLoading
-              ? Column(
+              ? const Column(
                   children: [
                     SizedBox(
                       width: 24,
@@ -119,7 +117,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                   ],
                 )
               : Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
                       //v: Caption
@@ -129,14 +127,14 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                           controller: _textEditingControllerCaption,
                           maxLines: 2,
                           maxLength: 200,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               label: CustomText(
                                 text: 'Caption',
                               ),
                               border: OutlineInputBorder()),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       // v: Image preview
@@ -154,7 +152,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                 // itemCount: _imgStrList.isEmpty ? 0 : _imgStrList.length,
                                 itemBuilder: ((context, index) {
                                   return Padding(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 4),
                                           child: /* Utility.imageFromBase64String(
                                   _imgDetailModelList[index].imgUrl) ,*/
@@ -171,12 +169,12 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                             : null,
                       ),
 
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         child: Visibility(
                           visible: _isScanning == false,
                           child: _recognitions == null
@@ -209,7 +207,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                             }
                                           });
                                         },
-                                        child: TextField(
+                                        child: const TextField(
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(),
                                               enabled: false,
@@ -229,7 +227,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 32,
                                     ),
                                     // v: Camera button
@@ -263,7 +261,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                             }
                                           });
                                         },
-                                        child: TextField(
+                                        child: const TextField(
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(),
                                               enabled: false,
@@ -291,54 +289,54 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
+                                        const Text(
                                           "Category",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 4,
                                         ),
-                                        Text(
+                                        const Text(
                                           ":",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 4,
                                         ),
                                         Text(
                                           _recognitions![0]['label'],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 6,
                                     ),
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
+                                        const Text(
                                           "Confidence",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 4,
                                         ),
-                                        Text(
+                                        const Text(
                                           ":",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 4,
                                         ),
                                         Text(
                                           "${double.parse(_recognitions![0]['confidence'].toString()).toStringAsFixed(2)}%",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ],
@@ -347,12 +345,12 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                 ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                         child: _isScanning
                             ? MyWidget.vButtonProgressLoader(
                                 color: MyColors.thirdColor,
@@ -372,19 +370,19 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                         Navigator.pop(context);
                                         // mCallBack();
                                       },
-                                      child: CustomText(
+                                      child: const CustomText(
                                         text: 'Discard',
                                         fontcolor: Colors.white,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 32,
                                   ),
                                   // v: scan button
                                   Expanded(
                                     child: _isUploadBtnLoading
-                                        ? Row(
+                                        ? const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
@@ -404,7 +402,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                                           setState(() {
                                                             _isScanning = true;
                                                           }),
-                                                          Future.delayed(Duration(
+                                                          Future.delayed(const Duration(
                                                                   milliseconds:
                                                                       3000))
                                                               .then((value) =>
@@ -413,7 +411,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                                       : ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
-                                                              SnackBar(
+                                                              const SnackBar(
                                                                   content:
                                                                       CustomText(
                                                           text: 'Pick a photo',
@@ -422,7 +420,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                                   // c: [Deprecated] Save to Cloud
                                                   // mSaveToCloud();
                                                 },
-                                                child: CustomText(
+                                                child: const CustomText(
                                                   text: 'Scan',
                                                   fontcolor: Colors.white,
                                                 ))
@@ -453,12 +451,12 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
         builder: (BuildContext context, ScrollController scrollController,
                 double bottomSheetOffset) =>
             Container(
-              margin: EdgeInsets.only(top: 25, left: 8, bottom: 6),
+              margin: const EdgeInsets.only(top: 25, left: 8, bottom: 6),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
+                  const Row(
                     children: [
                       CustomText(
                         text: 'Save to',
@@ -466,7 +464,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                   ),
                   InkWell(
@@ -475,22 +473,22 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               // vertical: 6,
                               horizontal: 14),
-                          child: Icon(
+                          child: const Icon(
                             Icons.phone_android_rounded,
                             color: MyColors.firstColor,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.all(2),
-                          child: CustomText(text: 'Local album'),
+                          margin: const EdgeInsets.all(2),
+                          child: const CustomText(text: 'Local album'),
                         )
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   InkWell(
@@ -502,17 +500,17 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               // vertical: 6,
                               horizontal: 14),
-                          child: Icon(
+                          child: const Icon(
                             Icons.cloud_circle_rounded,
                             color: MyColors.firstColor,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.all(2),
-                          child: CustomText(text: 'Cloud album'),
+                          margin: const EdgeInsets.all(2),
+                          child: const CustomText(text: 'Cloud album'),
                         ),
                       ],
                     ),
@@ -608,8 +606,6 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
   void _predictImage() async {
     File image = File(_imgDetailModelList[0].getImgUrl);
 
-    List<int> bytes = await image.readAsBytes();
-    Uint8List uint8list = Uint8List.fromList(bytes);
     // var recognitions = await Tflite.runModelOnBinary(binary: uint8list);
 
     var recognitions = await Tflite.runModelOnImage(
@@ -666,7 +662,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
         },
         child: _isImgUploading
             ? MyWidget.vButtonProgressLoader(labelText: "Uploading..")
-            : Icon(
+            : const Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.white,
               ));

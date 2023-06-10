@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/my_services.dart';
@@ -33,9 +32,9 @@ class _ArtGuideScreenState extends State<ArtGuideScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: MyColors.secondColor),
+        iconTheme: const IconThemeData(color: MyColors.secondColor),
         elevation: 1,
-        title: Text(
+        title: const Text(
           "Art Guide",
           style: TextStyle(color: MyColors.secondColor),
         ),
@@ -62,7 +61,7 @@ class _ArtGuideScreenState extends State<ArtGuideScreen> {
                   );
                 },
                 color: Colors.white,
-                icon: GFAvatar(
+                icon: const GFAvatar(
                   backgroundColor: Colors.red,
                   shape: GFAvatarShape.standard,
                   child: Icon(Icons.play_arrow, color: Colors.white,),

@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/my_services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';

@@ -1,5 +1,5 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ import 'package:flutter_application_1/models/model.post.dart';
 import 'package:flutter_application_1/models/model.user.dart';
 import 'package:flutter_application_1/screens/art%20guide/scr.art_guide.dart';
 import 'package:flutter_application_1/screens/landing/pages/comments.dart';
+import 'package:flutter_application_1/screens/landing/widgets/dlg_rating.dart';
 import 'package:flutter_application_1/screens/profile/scr_profile.dart';
 import 'package:flutter_application_1/screens/signin/scr_signin.dart';
 import 'package:flutter_application_1/utils/my_date_format.dart';
@@ -32,21 +33,17 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  
+
   final String _userName = "user_0012001";
   final String _imgCategory = "all category";
-  final String _userEmail = "user_0012001@gmail.com";
   int _pageIndex = 0;
   final Logger logger = Logger();
   late FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   bool _isDataLoading = true;
   String _dropDownValue = "All Category";
-  String _likes = "23";
-  String _comments = "30";
-  final String _uploadedTime = "12, june 2023";
-  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   List<Post>? posts;
-  late ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController = ScrollController();
   late CollectionReference _collectionReferencePOST;
   late CollectionReference _collectionReferenceLIKER;
 
@@ -163,13 +160,13 @@ class _LandingScreenState extends State<LandingScreen> {
           vDrawerHeader(),
           ListTile(
             title: const Text(
-              "Art Guide",
+              "Art Guide Video",
             ),
-            leading: const Icon(Icons.newspaper),
+            leading: const Icon(Icons.play_arrow_rounded),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ArtGuideScreen();
+                return const ArtGuideScreen();
               }));
             },
           ),
@@ -217,7 +214,7 @@ class _LandingScreenState extends State<LandingScreen> {
       currentAccountPicture: CircleAvatar(
         child: widget.userData.imgUri != null
             ? Image(image: NetworkImage(widget.userData.imgUri!))
-            : Image(image: AssetImage("assets/images/user.png")),
+            : const Image(image: AssetImage("assets/images/user.png")),
       ),
     );
   }
@@ -250,7 +247,8 @@ class _LandingScreenState extends State<LandingScreen> {
                 });
                 await MyFirestoreService.mFetchInitialPost(
                         firebaseFirestore: firebaseFirestore,
-                        category: "all category")
+                        category: "all category",
+                        userData: widget.userData)
                     .then((value) {
                   posts!.clear;
                   setState(() {
@@ -277,7 +275,9 @@ class _LandingScreenState extends State<LandingScreen> {
                       child: vItem(index),
                     )
                   : vItem(index)
-              : MyWidget.vPostPaginationShimmering(context: context);
+              : posts!.length > 1
+                    ? MyWidget.vPostPaginationShimmering(context: context)
+                    : Container();
         }));
   }
 
@@ -285,7 +285,7 @@ class _LandingScreenState extends State<LandingScreen> {
     return Container(
       height: MyScreenSize.mGetHeight(context, 6),
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(bottom: 8, left: 12, right: 12),
+      margin: const EdgeInsets.only(bottom: 8, left: 12, right: 12),
       child: DropdownButtonHideUnderline(
         child: GFDropdown(
           isExpanded: true,
@@ -301,7 +301,8 @@ class _LandingScreenState extends State<LandingScreen> {
             });
             await MyFirestoreService.mFetchInitialPost(
                     firebaseFirestore: firebaseFirestore,
-                    category: _dropDownValue)
+                    category: _dropDownValue,
+                    userData: widget.userData)
                 .then((value) {
               posts!.clear;
               setState(() {
@@ -336,19 +337,19 @@ class _LandingScreenState extends State<LandingScreen> {
           children: [
             Container(
               // height: MyScreenSize.mGetHeight(context, 1),
-              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
               alignment: Alignment.center,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: MyColors.thirdColor),
               child: Text(
                 post.category!,
-                style: TextStyle(color: MyColors.secondColor),
+                style: const TextStyle(color: MyColors.secondColor),
               ),
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 4,
         ),
         Row(
@@ -366,7 +367,7 @@ class _LandingScreenState extends State<LandingScreen> {
     return GFCard(
       // color: MyColors.thirdColor.withOpacity(0.8),
 
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 5,
       boxFit: BoxFit.cover,
       titlePosition: GFPosition.start,
@@ -377,10 +378,10 @@ class _LandingScreenState extends State<LandingScreen> {
 
       showImage: true,
       title: GFListTile(
-        margin: EdgeInsets.only(bottom: 6),
-        shadow: BoxShadow(color: Colors.white),
+        margin: const EdgeInsets.only(bottom: 6),
+        shadow: const BoxShadow(color: Colors.white),
         color: Colors.white,
-        avatar: GFAvatar(
+        avatar: const GFAvatar(
           size: 24,
           backgroundImage: AssetImage('assets/images/user.png'),
         ),
@@ -389,13 +390,12 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
       content: vCatAndCap(post),
       buttonBar: GFButtonBar(
-        padding: EdgeInsets.all(6),
+        padding: const EdgeInsets.all(6),
         spacing: 16,
         children: <Widget>[
           vLikeButton(post),
           vCommentButton(post),
-          vRatingButton(post)
-          ,
+          vRatingButton(post),
         ],
       ),
     );
@@ -419,24 +419,24 @@ class _LandingScreenState extends State<LandingScreen> {
               color: post.likeStatus! ? Colors.white : MyColors.secondColor,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
-          Text(
+          const Text(
             "Likes",
             style: TextStyle(color: Colors.black54),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
           post.numOfLikes == null
-              ? Text(
+              ? const Text(
                   "0",
                   style: TextStyle(color: Colors.black54),
                 )
               : Text(
                   "${post.numOfLikes}",
-                  style: TextStyle(color: Colors.black54),
+                  style: const TextStyle(color: Colors.black54),
                 )
         ],
       ),
@@ -451,7 +451,7 @@ class _LandingScreenState extends State<LandingScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GFAvatar(
+          const GFAvatar(
             size: GFSize.SMALL,
             backgroundColor: Colors.black12,
             child: Icon(
@@ -459,24 +459,24 @@ class _LandingScreenState extends State<LandingScreen> {
               color: MyColors.secondColor,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
-          Text(
+          const Text(
             "Comments",
             style: TextStyle(color: Colors.black54),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
           post.numOfComments == null
-              ? Text(
+              ? const Text(
                   "0",
                   style: TextStyle(color: Colors.black54),
                 )
               : Text(
                   "${post.numOfComments}",
-                  style: TextStyle(color: Colors.black54),
+                  style: const TextStyle(color: Colors.black54),
                 )
         ],
       ),
@@ -507,7 +507,7 @@ class _LandingScreenState extends State<LandingScreen> {
         Navigator.pop(context);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return LoginScreen();
+          return const LoginScreen();
         }));
       }
     });
@@ -516,7 +516,9 @@ class _LandingScreenState extends State<LandingScreen> {
   void mLoadData() async {
     logger.d("Loading post...");
     MyFirestoreService.mFetchInitialPost(
-            firebaseFirestore: firebaseFirestore, category: _imgCategory)
+            userData: widget.userData,
+            firebaseFirestore: firebaseFirestore,
+            category: _imgCategory)
         .then((value) {
       setState(() {
         posts = value;
@@ -566,6 +568,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void mLoadMore() async {
     await MyFirestoreService.mFetchMorePosts(
+      userData: widget.userData,
             firebaseFirestore: firebaseFirestore,
             category: _dropDownValue,
             lastVisibleDocumentId: posts!.last.postId!)
@@ -648,12 +651,13 @@ class _LandingScreenState extends State<LandingScreen> {
   void mUpdatePostData(DocumentSnapshot<Object?> doc, int i) {
     posts![i].numOfLikes = doc.get(MyKeywords.num_of_likes);
     posts![i].numOfComments = doc.get(MyKeywords.num_of_comments);
+    posts![i].ratings = doc.get(MyKeywords.ratings);
   }
 
   Widget vNoResultFound() {
     return SizedBox(
       height: MyScreenSize.mGetHeight(context, 100),
-      child: Center(
+      child: const Center(
         child: Text(
           "No result found.",
           style: TextStyle(
@@ -685,54 +689,208 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   vPostShimmering() {
-   return Padding(
+    return Padding(
         padding: EdgeInsets.only(top: MyScreenSize.mGetHeight(context, 11)),
         child: MyWidget.vPostShimmering(context: context));
   }
-  
-  vRatingButton(Post post) {
 
+  vRatingButton(Post post) {
     return InkWell(
       onTap: () async {
-        mOnClickRatingButton(post);
+        mShowRatingDialog(post);
+        // mOnClickRatingButton(post);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           GFAvatar(
-            backgroundColor: post.likeStatus!
-                ? Colors.deepOrange
+            backgroundColor: post.ratingStatus!
+                // backgroundColor: post.likeStatus!
+                ? MyColors.thirdColor
                 : Colors.black12 /* GFColors.PRIMARY */,
             size: GFSize.SMALL,
             child: Icon(
               Icons.star_border,
-              color: post.likeStatus! ? Colors.white : MyColors.secondColor,
+              color: post.ratingStatus! ? Colors.white : MyColors.secondColor,
+              // color: post.likeStatus! ? Colors.white : MyColors.secondColor,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
-          Text(
+          const Text(
             "Ratings",
             style: TextStyle(color: Colors.black54),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
-          post.numOfLikes == null
-              ? Text(
+          post.ratings == null
+              // post.numOfLikes == null
+              ? const Text(
                   "0",
                   style: TextStyle(color: Colors.black54),
                 )
               : Text(
-                  "${post.numOfLikes}",
-                  style: TextStyle(color: Colors.black54),
+                  "${post.ratings}",
+                  // "${post.numOfLikes}",
+                  style: const TextStyle(color: Colors.black54),
                 )
         ],
       ),
     );
- 
   }
-  
-  void mOnClickRatingButton(Post post) {}
+
+  /*  Future<void> mOnClickRatingButton(Post post) async {
+    await MyFirestoreService.mStoreRatingData(
+            firebaseFirestore: firebaseFirestore,
+            email: post.email!,
+            postId: post.postId!
+            ratingValue:  )
+        .then((rate) {
+      if (rate != null) {
+        if (rate) {
+          // c: like
+          logger.w("Rate");
+          posts![posts!.indexOf(post)].ratingStatus = true;
+        } else {
+          // c: unlike
+          logger.w("unRate");
+          posts![posts!.indexOf(post)].ratingStatus = false;
+        }
+        // c: refresh
+        setState(() {});
+      }
+    });
+  } */
+
+  void mShowRatingDialog(Post post) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return RatingDialog(
+            ratingValue: post.ratingValue ?? 0,
+            callback: (int ratingValue) {
+              logger.w("Rating value input: ${ratingValue.runtimeType}");
+              if (ratingValue > 0) {
+                // calculate rate and store
+                mStoreandUpdateRating(post, ratingValue);
+              }
+            },
+          );
+        });
+
+    /* 
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.noHeader,
+        body: Column(
+          children: [
+            Text(
+              "Do you want to rate this?",
+              style: TextStyle(color: MyColors.secondColor, fontSize: 18),
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _currentRate = 1;
+                    });
+                  },
+                  child: Icon(
+                    Icons.star,
+                    color:
+                        _currentRate < 1 ? Colors.black26 : MyColors.thirdColor,
+                  ),
+                )),
+                Expanded(
+                    child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _currentRate = 2;
+                    });
+                  },
+                  child: Icon(
+                    Icons.star,
+                    color:
+                        _currentRate < 2 ? Colors.black26 : MyColors.thirdColor,
+                  ),
+                )),
+                Expanded(
+                    child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _currentRate = 3;
+                    });
+                  },
+                  child: Icon(
+                    Icons.star,
+                    color:
+                        _currentRate < 3 ? Colors.black26 : MyColors.thirdColor,
+                  ),
+                )),
+                Expanded(
+                    child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _currentRate = 4;
+                    });
+                  },
+                  child: Icon(
+                    Icons.star,
+                    color:
+                        _currentRate < 4 ? Colors.black26 : MyColors.thirdColor,
+                  ),
+                )),
+                Expanded(
+                    child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _currentRate = 5;
+                    });
+                  },
+                  child: Icon(
+                    Icons.star,
+                    color:
+                        _currentRate < 5 ? Colors.black26 : MyColors.thirdColor,
+                  ),
+                )),
+              
+              ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+        btnOk: ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+              fixedSize: Size(0, MyScreenSize.mGetHeight(context, 2))),
+          child: Text("Ok"),
+        )).show();
+   */
+  }
+
+  void mStoreandUpdateRating(Post post, int ratingValue) async {
+    await MyFirestoreService.mStoreRatingData(
+            firebaseFirestore: firebaseFirestore,
+            email: widget.userData.email!,
+            postId: post.postId!,
+            ratingValue: ratingValue)
+        .then((rated) {
+      if (rated) {
+        // c: like
+        logger.w("rated");
+        posts![posts!.indexOf(post)].ratingStatus = true;
+      }
+      // c: refresh
+      setState(() {});
+    });
+  }
 }

@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_getters_setters
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/models/model.user.dart';
 
 class Post {
@@ -18,6 +17,11 @@ class Post {
   List<Commenter>? _commenter;
   UserData? _users;
   bool? _likedStatus;
+  // int? _numOfRatings;
+  int? _ratingValue;
+  double? _ratings;
+
+  bool? _ratingStatus;
 
   Post({
     String? postId,
@@ -34,12 +38,19 @@ class Post {
     List<Disliker>? disliker,
     List<Commenter>? commenter,
     UserData? users,
+    // int? numOfRatings,
+    bool? ratingStatus,
+    int? ratingValue,
+    double? ratings,
   }) {
     if (postId != null) {
       _postId = postId;
     }
     if (likedStatus != null) {
       _likedStatus = likedStatus;
+    }
+    if (ratingStatus != null) {
+      _ratingStatus = ratingStatus;
     }
     if (email != null) {
       _email = email;
@@ -59,6 +70,9 @@ class Post {
     if (numOfComments != null) {
       _numOfComments = numOfComments;
     }
+    /* if (numOfRatings != null) {
+      _numOfRatings = numOfRatings;
+    } */
     if (category != null) {
       _category = category;
     }
@@ -77,12 +91,24 @@ class Post {
     if (users != null) {
       _users = users;
     }
+    if (ratingValue != null) {
+      _ratingValue = ratingValue;
+    }
+    if (ratings != null) {
+      _ratings = ratings;
+    }
   }
 
+  int? get ratingValue => _ratingValue;
+  set ratingValue(int? value) => _ratingValue = value;
+  double? get ratings => _ratings;
+  set ratings(double? value) => _ratings = value;
   String? get postId => _postId;
   set postId(String? postId) => _postId = postId;
   bool? get likeStatus => _likedStatus;
   set likeStatus(bool? likedStatus) => _likedStatus = likedStatus;
+  bool? get ratingStatus => _ratingStatus;
+  set ratingStatus(bool? ratingStatus) => _ratingStatus = ratingStatus;
   String? get email => _email;
   set email(String? email) => _email = email;
   String? get caption => _caption;
@@ -95,6 +121,8 @@ class Post {
   set numOfDislikes(int? numOfDislikes) => _numOfDislikes = numOfDislikes;
   int? get numOfComments => _numOfComments;
   set numOfComments(int? numOfComments) => _numOfComments = numOfComments;
+/*   int? get numOfRatings => _numOfRatings;
+  set numOfRatings(int? numOfRatings) => _numOfRatings = numOfRatings; */
   String? get category => _category;
   set category(String? category) => _category = category;
   String? get ts => _ts;
@@ -147,6 +175,9 @@ class Post {
     data['num_of_likes'] = _numOfLikes;
     data['num_of_dislikes'] = _numOfDislikes;
     data['num_of_comments'] = _numOfComments;
+    // data['num_of_ratings'] = _numOfRatings;
+    data['ratingValue'] = _ratingValue;
+    data['ratings'] = _ratings;
     data['category'] = _category;
     data['ts'] = _ts;
     // data['users'] = _users!.toJson();

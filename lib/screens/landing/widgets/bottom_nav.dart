@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 
 
 import 'package:flutter/material.dart';
@@ -75,7 +74,7 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
                     Icons.home,
                     color: tabColor0,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 4,
                   ),
                   Text(
@@ -105,9 +104,9 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
               ),
             ), */
 
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Text(
                 "Upload",
                 style: TextStyle(color: Colors.white),
               ),
@@ -149,7 +148,7 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
                     Icons.person,
                     color: tabColor1,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 4,
                   ),
                   Text(

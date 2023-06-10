@@ -1,6 +1,10 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/const/keywords.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controller/firestore_service.dart';
 import '../../controller/my_authentication_service.dart';
@@ -32,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool ispasswordev = true;
   FormData? selected;
   bool isLoading = false;
+  bool isRememberd = false;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -43,11 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     firebaseAuth = FirebaseAuth.instance;
     // c: check already signed in user
-    User? user = MyAuthenticationService.mCheckUserSignInStatus(
+ /*    User? user = MyAuthenticationService.mCheckUserSignInStatus(
         firebaseAuth: firebaseAuth);
     if (user != null) {
       mLoadUserData(user);
-    }
+    } */
   }
 
   @override
@@ -66,14 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
               MyColors.firstColor
             ],
           ),
-          /* image: DecorationImage(
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-                HexColor("#fff").withOpacity(0.2), BlendMode.dstATop),
-            image: const NetworkImage(
-              'https://mir-s3-cdn-cf.behance.net/project_modules/fs/01b4bd84253993.5d56acc35e143.jpg',
-            ),
-          ), */
+         
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -107,6 +105,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 20,
                         ),
                         vPassInputFiled(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        vRememberMe(),
                         const SizedBox(
                           height: 20,
                         ),
@@ -259,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
       style: ElevatedButton.styleFrom(
           fixedSize: Size(MyScreenSize.mGetWidth(context, 60), 40),
           backgroundColor: MyColors.firstColor,
-          padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0))),
       child: isLoading
@@ -340,6 +342,8 @@ class _LoginScreenState extends State<LoginScreen> {
               .then((value) {
             value != null
                 ? {
+                    // c: Save session data into sharedpreferece
+                    mSaveSessionStatus(),
                     // c: Go to Landing Screen
                     mGoForward(user, value)
                   }
@@ -395,5 +399,28 @@ class _LoginScreenState extends State<LoginScreen> {
         mGoForward(user, value);
       }
     });
+  }
+
+  vRememberMe() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        GFCheckbox(
+            size: GFSize.SMALL,
+            onChanged: (value) {
+              setState(() {
+                isRememberd = !isRememberd;
+              });
+            },
+            value: isRememberd),
+        const Text("Remember me")
+      ],
+    );
+  }
+
+  mSaveSessionStatus() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    sharedPreferences.setBool(MyKeywords.sessionStatus, isRememberd);
   }
 }

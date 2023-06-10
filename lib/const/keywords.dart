@@ -20,6 +20,7 @@ class MyKeywords {
   static const String LIKER = "LIKER";
   static const String DISLIKER = "DISLIKER";
   static const String COMMENTER = "COMMENTER";
+  static const String RATER = "RATER";
   static const String post_id = "post_id";
   static const String caption = "caption";
   static const String num_of_likes = "num_of_likes";
@@ -38,8 +39,13 @@ class MyKeywords {
   static const String disliker = "disliker";
   static const String commenter = "commenter";
   static const String users = "users";
+  static const String totalRatingValue = "total_rating_value";
+  static const String ratings = "ratings";
+  static const String ratingValue = "ratingValue";
+  static const String numOfRatings = "num_of_ratings";
   
 
   // m: For Sharedpreparance
   static const String singleImgUrls = "singleImgUrls";
+  static const String sessionStatus = "sessionStatus";
 }

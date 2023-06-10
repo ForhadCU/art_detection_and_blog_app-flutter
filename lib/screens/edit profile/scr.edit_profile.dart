@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sort_child_properties_last
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,7 +76,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       // backgroundColor: MyColors.thirdColor,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Edit Profile",
           style: TextStyle(color: MyColors.secondColor),
         ),
@@ -86,7 +85,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         elevation: 0,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -214,8 +213,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
             mUpdateOperation();
           });
         },
+        style: ElevatedButton.styleFrom(
+            /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
+                MyScreenSize.mGetHeight(context, 7)), */
+            backgroundColor: MyColors.thirdColor,
+            // backgroundColor: const Color(0xFF2697FF),
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0))),
         child: !isLoading
-            ? Text(
+            ? const Text(
                 "Update",
                 style: TextStyle(
                   color: Colors.white,
@@ -224,15 +231,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   fontWeight: FontWeight.bold,
                 ),
               )
-            : MyWidget.vButtonProgressLoader(labelText: "Updating..."),
-        style: ElevatedButton.styleFrom(
-            /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
-                MyScreenSize.mGetHeight(context, 7)), */
-            backgroundColor: MyColors.thirdColor,
-            // backgroundColor: const Color(0xFF2697FF),
-            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0))));
+            : MyWidget.vButtonProgressLoader(labelText: "Updating..."));
   }
 
   Widget _vPhone() {
@@ -424,9 +423,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     fixedSize: Size(400, MyScreenSize.mGetHeight(context, 1)),
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
-                child: Text("Go to Home"),
+                child: const Text("Go to Home"),
               )).show();
-          ;
+          
         }
 
                 /*  else {
@@ -463,7 +462,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime.now().add(Duration(days: -40000)),
+            firstDate: DateTime.now().add(const Duration(days: -40000)),
             lastDate: DateTime.now())
         .then((value) {
       if (value != null) {

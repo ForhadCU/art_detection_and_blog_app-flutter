@@ -1,27 +1,21 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const/keywords.dart';
-import 'package:flutter_application_1/controller/my_authentication_service.dart';
 import 'package:flutter_application_1/controller/firestore_service.dart';
+import 'package:flutter_application_1/controller/my_authentication_service.dart';
 import 'package:flutter_application_1/models/model.post.dart';
 import 'package:flutter_application_1/models/model.user.dart';
-import 'package:flutter_application_1/screens/art%20guide/scr.art_guide.dart';
 import 'package:flutter_application_1/screens/landing/pages/comments.dart';
-import 'package:flutter_application_1/screens/profile/scr_profile.dart';
 import 'package:flutter_application_1/screens/signin/scr_signin.dart';
 import 'package:flutter_application_1/utils/my_date_format.dart';
 import 'package:flutter_application_1/widgets/my_widget.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/my_colors.dart';
 import '../../utils/my_screensize.dart';
-import '../landing/widgets/bottom_nav.dart';
-import '../landing/widgets/my_bottom_sheet.dart';
 
 class MyPostScreen extends StatefulWidget {
   final UserData userData;
@@ -80,7 +74,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             "My Posts",
             style: TextStyle(color: MyColors.secondColor),
           ),
@@ -109,19 +103,19 @@ class _MyPostScreenState extends State<MyPostScreen> {
           children: [
             Container(
               // height: MyScreenSize.mGetHeight(context, 1),
-              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
               alignment: Alignment.center,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: MyColors.thirdColor),
               child: Text(
                 post.category!,
-                style: TextStyle(color: MyColors.secondColor),
+                style: const TextStyle(color: MyColors.secondColor),
               ),
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 4,
         ),
         Row(
@@ -138,7 +132,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     Post post = posts![index];
     return GFCard(
       // color: Colors.white,
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 5,
       boxFit: BoxFit.cover,
       titlePosition: GFPosition.start,
@@ -149,10 +143,10 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
       showImage: true,
       title: GFListTile(
-        margin: EdgeInsets.only(bottom: 6),
-        shadow: BoxShadow(color: Colors.white),
+        margin: const EdgeInsets.only(bottom: 6),
+        shadow: const BoxShadow(color: Colors.white),
         color: Colors.white,
-        avatar: GFAvatar(
+        avatar: const GFAvatar(
           size: 24,
           backgroundImage: AssetImage('assets/images/user.png'),
         ),
@@ -161,7 +155,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
       ),
       content: vCatAndCap(post),
       buttonBar: GFButtonBar(
-        padding: EdgeInsets.all(6),
+        padding: const EdgeInsets.all(6),
         spacing: 16,
         children: <Widget>[
           vLikeButton(post),
@@ -190,24 +184,24 @@ class _MyPostScreenState extends State<MyPostScreen> {
               color: post.likeStatus! ? Colors.white : MyColors.secondColor,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
-          Text(
+          const Text(
             "Likes",
             style: TextStyle(color: Colors.black54),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
           post.numOfLikes == null
-              ? Text(
+              ? const Text(
                   "0",
                   style: TextStyle(color: Colors.black54),
                 )
               : Text(
                   "${post.numOfLikes}",
-                  style: TextStyle(color: Colors.black54),
+                  style: const TextStyle(color: Colors.black54),
                 )
         ],
       ),
@@ -222,7 +216,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GFAvatar(
+          const GFAvatar(
             size: GFSize.SMALL,
             backgroundColor: Colors.black12,
             child: Icon(
@@ -230,24 +224,24 @@ class _MyPostScreenState extends State<MyPostScreen> {
               color: MyColors.secondColor,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
-          Text(
+          const Text(
             "Comments",
             style: TextStyle(color: Colors.black54),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
           post.numOfComments == null
-              ? Text(
+              ? const Text(
                   "0",
                   style: TextStyle(color: Colors.black54),
                 )
               : Text(
                   "${post.numOfComments}",
-                  style: TextStyle(color: Colors.black54),
+                  style: const TextStyle(color: Colors.black54),
                 )
         ],
       ),
@@ -277,7 +271,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
         Navigator.pop(context);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return LoginScreen();
+          return const LoginScreen();
         }));
       }
     });
@@ -338,6 +332,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
   void mLoadMore() async {
     await MyFirestoreService.mFetchMorePosts(
+            userData: widget.userData,
             firebaseFirestore: firebaseFirestore,
             category: _dropDownValue,
             lastVisibleDocumentId: posts!.last.postId!)
@@ -425,7 +420,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
   Widget vNoResultFound() {
     return SizedBox(
       height: MyScreenSize.mGetHeight(context, 100),
-      child: Center(
+      child: const Center(
         child: Text(
           "No result found.",
           style: TextStyle(
@@ -476,7 +471,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
           }
         });
       },
-      child: Column(
+      child: const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           GFAvatar(

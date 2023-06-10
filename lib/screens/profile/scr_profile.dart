@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,14 +30,8 @@ class _ProfilePageState extends State<ProfilePage> {
   var _isUserDataExpanded = true;
   Logger logger = Logger();
 
-  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   List<Post>? posts;
-  late ScrollController _scrollController = ScrollController();
-  late CollectionReference _collectionReferencePOST;
-  late CollectionReference _collectionReferenceLIKER;
   late FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  String _dropDownValue = "All Category";
-  bool _isDataLoading = true;
 
   @override
   void initState() {
@@ -46,11 +39,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     logger.w("Call Profile");
 
-    _collectionReferencePOST = firebaseFirestore.collection(MyKeywords.POST);
-    _collectionReferenceLIKER = firebaseFirestore
-        .collection(MyKeywords.POST)
-        .doc()
-        .collection(MyKeywords.LIKER);
 
 /*     mLoadData(); // c: Load latest 10 posts from firebase firestore
 
@@ -63,7 +51,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.thirdColor.withOpacity(0.5),
+      // backgroundColor: MyColors.thirdColor.withOpacity(0.5),
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           // Container(height: MyScreenSize.mGetHeight(context, 100), width: MyScreenSize.mGetWidth(context, 100), color: Colors.blue,),
@@ -76,7 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -88,20 +77,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 2,
                 ), */
                 vUserNameAndEmail(),
-                SizedBox(
+                const SizedBox(
                   height: 18,
                 ),
                 vAddPostAndEditProfile(context),
                 Visibility(
                     visible: _isUserDataExpanded, child: vUserOtherDetails()),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
-                Divider(
+                const Divider(
                   height: 1,
                   color: Colors.black26,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 // vShowAllPosts(),
@@ -133,19 +122,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
   vUserNameAndEmail() {
     return Container(
-      padding: EdgeInsets.only(left: 18),
+      padding: const EdgeInsets.only(left: 18),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.userData.username!,
-            style: TextStyle(
+            style: const TextStyle(
                 color: MyColors.secondColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold),
           ),
-          SizedBox(
+          const SizedBox(
             height: 6,
           ),
           Row(
@@ -156,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ), */
               Text(
                 widget.userData.email!,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                 ),
               )
@@ -182,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: ElevatedButton.styleFrom(
                   backgroundColor: MyColors.firstColor,
                   fixedSize: Size(0, MyScreenSize.mGetHeight(context, 3.5))),
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(
                     Icons.newspaper_outlined,
@@ -195,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               )),
         ),
-        SizedBox(
+        const SizedBox(
           width: 14,
         ),
         Expanded(
@@ -210,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: ElevatedButton.styleFrom(
                   backgroundColor: MyColors.firstColor,
                   fixedSize: Size(0, MyScreenSize.mGetHeight(context, 3.5))),
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(
                     Icons.edit,
@@ -233,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     _isUserDataExpanded = !_isUserDataExpanded;
                   });
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_drop_down,
                   color: Colors.black45,
                   size: 32,
@@ -250,15 +239,15 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             vUserDob(),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             vUserAddress(),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             vUserContact(),
@@ -275,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           child: Container(
             alignment: Alignment.centerLeft,
-            child: Icon(
+            child: const Icon(
               Icons.calendar_month,
               color: Colors.black26,
             ),
@@ -284,18 +273,18 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           flex: 3,
           child: Container(
-              alignment: Alignment.centerLeft, child: Text("Date of birth")),
+              alignment: Alignment.centerLeft, child: const Text("Date of birth")),
         ),
         Expanded(
             child:
-                Container(alignment: Alignment.centerLeft, child: Text(":"))),
+                Container(alignment: Alignment.centerLeft, child: const Text(":"))),
         Expanded(
           flex: 6,
           child: Container(
             alignment: Alignment.centerLeft,
             child: Text(
               widget.userData.dob ?? "29 January, 1998",
-              style: TextStyle(color: MyColors.secondColor),
+              style: const TextStyle(color: MyColors.secondColor),
             ),
           ),
         )
@@ -310,7 +299,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           child: Container(
             alignment: Alignment.centerLeft,
-            child: Icon(
+            child: const Icon(
               Icons.location_pin,
               color: Colors.black26,
             ),
@@ -319,16 +308,16 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           flex: 3,
           child: Container(
-              alignment: Alignment.centerLeft, child: Text("Location")),
+              alignment: Alignment.centerLeft, child: const Text("Location")),
         ),
         Expanded(
             child:
-                Container(alignment: Alignment.centerLeft, child: Text(":"))),
+                Container(alignment: Alignment.centerLeft, child: const Text(":"))),
         Expanded(
           flex: 6,
           child: Container(
             alignment: Alignment.centerLeft,
-            child: Text(
+            child: const Text(
               "Bohoddarhat, Chittagong",
               style: TextStyle(color: MyColors.secondColor),
             ),
@@ -345,7 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           child: Container(
             alignment: Alignment.centerLeft,
-            child: Icon(
+            child: const Icon(
               Icons.phone,
               color: Colors.black26,
             ),
@@ -354,18 +343,18 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           flex: 3,
           child: Container(
-              alignment: Alignment.centerLeft, child: Text("Contact No")),
+              alignment: Alignment.centerLeft, child: const Text("Contact No")),
         ),
         Expanded(
             child:
-                Container(alignment: Alignment.centerLeft, child: Text(":"))),
+                Container(alignment: Alignment.centerLeft, child: const Text(":"))),
         Expanded(
           flex: 6,
           child: Container(
             alignment: Alignment.centerLeft,
             child: Text(
               "+88${widget.userData.phone!}",
-              style: TextStyle(color: MyColors.secondColor),
+              style: const TextStyle(color: MyColors.secondColor),
             ),
           ),
         )

@@ -1,8 +1,9 @@
-// ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/const/keywords.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controller/firestore_service.dart';
 import '../../controller/my_authentication_service.dart';
@@ -37,7 +38,7 @@ class _LauncherPageState extends State<LauncherPage> {
       height: MyScreenSize.mGetHeight(context, 100),
       width: MyScreenSize.mGetWidth(context, 100),
       alignment: Alignment.center,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         /*    gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -67,13 +68,17 @@ class _LauncherPageState extends State<LauncherPage> {
           ),
           Text(
             "App Name Goes Here",
-            style: TextStyle(color: MyColors.firstColor, fontSize: 24, fontWeight: FontWeight.w800),
+            style: TextStyle(
+                color: MyColors.firstColor,
+                fontSize: 24,
+                fontWeight: FontWeight.w800),
           )
         ],
       ),
     ));
   }
- void mGoForward(User user, UserData userData) {
+
+  void mGoForward(User user, UserData userData) {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
       return LandingScreen(
         userData: userData,
@@ -88,19 +93,26 @@ class _LauncherPageState extends State<LauncherPage> {
   }
 
   void mCheckUserLoggedInStatus() async {
-    User? user = MyAuthenticationService.mCheckUserSignInStatus(
-        firebaseAuth: firebaseAuth);
-     await Future.delayed(const Duration(milliseconds: 3000))
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await Future.delayed(const Duration(milliseconds: 3000))
         .then((value) async {
-      if (user != null) {
-        await MyFirestoreService.mFetchUserData(
-                firebaseFirestore: FirebaseFirestore.instance,
-                email: user.email!)
-            .then((value) {
-          if (value != null) {
-            mGoForward(user, value);
-          }
-        });
+      if (sharedPreferences.getBool(MyKeywords.sessionStatus) != null &&
+          sharedPreferences.getBool(MyKeywords.sessionStatus)!) {
+        User? user = MyAuthenticationService.mCheckUserSignInStatus(
+            firebaseAuth: firebaseAuth);
+
+        if (user != null) {
+          await MyFirestoreService.mFetchUserData(
+                  firebaseFirestore: FirebaseFirestore.instance,
+                  email: user.email!)
+              .then((value) {
+            if (value != null) {
+              mGoForward(user, value);
+            }
+          });
+        } else {
+          mGoSignIn();
+        }
       } else {
         mGoSignIn();
       }

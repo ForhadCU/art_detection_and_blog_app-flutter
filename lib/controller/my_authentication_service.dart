@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../const/keywords.dart';
 import '../utils/custom_text.dart';
@@ -173,6 +174,8 @@ class MyAuthenticationService {
   static Future<bool> mSignOut({required FirebaseAuth firebaseAuth}) async {
     bool isSignedOut = false;
     await firebaseAuth.signOut().then((value) => isSignedOut = true);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.clear();
 
     return isSignedOut;
   }

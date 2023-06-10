@@ -1,6 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -52,9 +49,10 @@ class _CommentsPageState extends State<CommentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: vAppBar(),
       body: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: _comments == null
             ? MyWidget.vCommentShimmering(context: context)
             : Column(
@@ -72,7 +70,7 @@ class _CommentsPageState extends State<CommentsPage> {
     return AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
-        iconTheme: IconThemeData(color: MyColors.secondColor),
+        iconTheme: const IconThemeData(color: MyColors.secondColor),
         // titleTextStyle: TextStyle(color: MyColors.secondColor),
         title: const Text(
           "Comments",
@@ -82,40 +80,76 @@ class _CommentsPageState extends State<CommentsPage> {
 
   Widget vAllComments() {
     return Expanded(
-        child: ListView.builder(
-            controller: _scrollController,
-            reverse: false,
-            itemCount: _comments!.length,
-            itemBuilder: (context, index) {
-              Commenter commenter = _comments![index];
-              return vItem(commenter);
-            }));
+      child: ListView.builder(
+          controller: _scrollController,
+          reverse: false,
+          itemCount: _comments!.length,
+          itemBuilder: (context, index) {
+            Commenter commenter = _comments![index];
+            return vItem(commenter);
+          }),
+    );
   }
 
   Widget vItem(Commenter commenter) {
     return Column(
       children: [
         GFListTile(
-          shadow: BoxShadow(color: Colors.white),
-          padding: EdgeInsets.all(0),
-          margin: EdgeInsets.only(left: 12, right: 12, top: 8),
+          shadow: const BoxShadow(color: Colors.white),
+          padding: const EdgeInsets.all(0),
+          margin: const EdgeInsets.only(left: 12, right: 4, top: 8),
           color: Colors.white,
-          avatar: GFAvatar(
-              backgroundImage: AssetImage('assets/images/user.png'),
-              size: 20,
-              shape: GFAvatarShape.circle),
-          titleText: commenter.user!.username,
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 2, left: 4),
-          child: GFCard(
-            borderRadius: BorderRadius.circular(2),
-            elevation: 0,
-            color: MyColors.fourthColor,
-            content: Text(commenter.text!),
+          avatar: Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: MyColors.secondColor,
+                  width: .8,
+                )),
+            child: const GFAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage('assets/images/user.png'),
+                size: 28,
+                shape: GFAvatarShape.circle),
           ),
+          title: GFCard(
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+            content: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: const Color.fromARGB(17, 0, 0, 0),
+              ),
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      commenter.user!.username!,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Text(commenter.text!),
+/*                     Text(
+                        "a Hindu spiritual and ascetic discipline, a part of which, including breath control, simple meditation, and the adoption of specific bodily postures, is widely practised for health and relaxation. she enjoys doing yoga to start the day"),
+ */
+                  ]),
+            ),
+          ),
+          /* titleText: commenter.user!.username,
+          description:  */
         ),
-        Divider(
+        const SizedBox(
+          height: 6,
+        ),
+        const Divider(
           thickness: 1,
           color: Colors.black26,
           height: 1,
@@ -126,7 +160,7 @@ class _CommentsPageState extends State<CommentsPage> {
 
   Widget vInputComment() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: GFTextField(
         controller: _editingControllerComment,
         maxLines: 2,
@@ -137,7 +171,7 @@ class _CommentsPageState extends State<CommentsPage> {
               onPressed: () {
                 mOnClickSendComment();
               },
-              icon: Icon(Icons.send),
+              icon: const Icon(Icons.send),
               color: Colors.black45,
             )),
         /* decoration: InputDecoration(border: OutlineInputBorder()) */
@@ -167,7 +201,7 @@ class _CommentsPageState extends State<CommentsPage> {
 // refresh
           setState(() {});
 
-          await Future.delayed(Duration(milliseconds: 1000));
+          await Future.delayed(const Duration(milliseconds: 1000));
           // c: comments list view scrolled to up
           mScrollDown();
         }
@@ -186,7 +220,7 @@ class _CommentsPageState extends State<CommentsPage> {
   }
 
   Widget vNoResultFound() {
-    return Expanded(
+    return const Expanded(
       child: Center(
         child: Text(
           "No comment found.",
@@ -208,7 +242,7 @@ class _CommentsPageState extends State<CommentsPage> {
     _scrollController.animateTo(
       /* double.parse(_comments!.length.toString()) */
       _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   }
@@ -217,7 +251,7 @@ class _CommentsPageState extends State<CommentsPage> {
   void mScrollUp() {
     _scrollController.animateTo(
       0,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   }

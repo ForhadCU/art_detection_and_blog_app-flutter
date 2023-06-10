@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, sort_child_properties_last
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,7 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -204,8 +203,16 @@ class _SignupScreenState extends State<SignupScreen> {
             mSignUpOperation();
           });
         },
+        style: ElevatedButton.styleFrom(
+            /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
+                MyScreenSize.mGetHeight(context, 7)), */
+            backgroundColor: MyColors.firstColor,
+            // backgroundColor: const Color(0xFF2697FF),
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0))),
         child: !isLoading
-            ? Text(
+            ? const Text(
                 "Sign Up",
                 style: TextStyle(
                   color: Colors.white,
@@ -214,15 +221,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               )
-            : MyWidget.vButtonProgressLoader(labelText: "Signing up..."),
-        style: ElevatedButton.styleFrom(
-            /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
-                MyScreenSize.mGetHeight(context, 7)), */
-            backgroundColor: MyColors.firstColor,
-            // backgroundColor: const Color(0xFF2697FF),
-            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0))));
+            : MyWidget.vButtonProgressLoader(labelText: "Signing up..."));
   }
 
   Widget _vConfirmPass() {
@@ -451,54 +450,15 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _vFullName() {
-    return Container(
-      width: 300,
-      height: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: selected == FormData.Email ? enabled : backgroundColor,
-      ),
-      padding: const EdgeInsets.all(5.0),
-      child: TextField(
-        controller: fullnameController,
-        onTap: () {
-          setState(() {
-            selected = FormData.FullName;
-          });
-        },
-        decoration: InputDecoration(
-          enabledBorder: InputBorder.none,
-          border: InputBorder.none,
-          prefixIcon: Icon(
-            Icons.title,
-            color: selected == FormData.FullName ? enabledtxt : deaible,
-            size: 20,
-          ),
-          hintText: 'Full Name',
-          hintStyle: TextStyle(
-              color: selected == FormData.FullName ? enabledtxt : deaible,
-              fontSize: 12),
-        ),
-        textAlignVertical: TextAlignVertical.center,
-        style: TextStyle(
-            color: selected == FormData.FullName ? enabledtxt : deaible,
-            fontWeight: FontWeight.bold,
-            fontSize: 12),
-      ),
-    );
-  }
 
   Widget _vCreateAccountText() {
-    return Container(
-      child: Text(
-        "Create your account",
-        style: TextStyle(
-            // color: Colors.white.withOpacity(0.9),
-            // color: UtilsColor.secondColor,
-            color: MyColors.secondColor,
-            letterSpacing: 0.5),
-      ),
+    return const Text(
+      "Create your account",
+      style: TextStyle(
+          // color: Colors.white.withOpacity(0.9),
+          // color: UtilsColor.secondColor,
+          color: MyColors.secondColor,
+          letterSpacing: 0.5),
     );
   }
 
@@ -524,7 +484,7 @@ class _SignupScreenState extends State<SignupScreen> {
           onTap: () {
             Navigator.pop(context);
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return LoginScreen();
+              return const LoginScreen();
             }));
           },
           child: Text("Sing in",
@@ -538,38 +498,6 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _vAddressLocation() {
-    return Container(
-      width: 300,
-      height: 40,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0), color: backgroundColor),
-      padding: const EdgeInsets.all(5.0),
-      child: InkWell(
-        onTap: () {
-          confirmPasswordController.text = "Set text";
-          // context.read<SignupBloc>().add(CalenderDialogOpenEvent());
-        },
-        child: TextField(
-          controller: addressController,
-          enabled: false,
-          decoration: InputDecoration(
-              enabledBorder: InputBorder.none,
-              border: InputBorder.none,
-              prefixIcon: Icon(
-                Icons.location_city,
-                color: deaible,
-                size: 20,
-              ),
-              hintText: 'Address Location',
-              hintStyle: TextStyle(color: deaible, fontSize: 12)),
-          textAlignVertical: TextAlignVertical.center,
-          style: TextStyle(
-              color: deaible, fontWeight: FontWeight.bold, fontSize: 12),
-        ),
-      ),
-    );
-  }
 
   bool mCheckInputValidation() {
     if (usernameController.value.text.isNotEmpty &&
@@ -616,7 +544,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 await MyFirestoreService.mStoreUserCredential(
                     firebaseFirestore: firebaseFirestore, user: users);
 
-                Future.delayed(Duration(milliseconds: 1)).then((value) {
+                Future.delayed(const Duration(milliseconds: 1)).then((value) {
                   MyWidget.vShowWarnigDialog(
                           context: context,
                           message: "Email verification has been sent",
@@ -641,7 +569,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               Size(400, MyScreenSize.mGetHeight(context, 1)),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4)),
-                      child: Text("Dismiss"),
+                      child: const Text("Dismiss"),
                     )).show();
               }
             });
@@ -675,7 +603,7 @@ class _SignupScreenState extends State<SignupScreen> {
     showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime.now().add(Duration(days: -40000)),
+            firstDate: DateTime.now().add(const Duration(days: -40000)),
             lastDate: DateTime.now())
         .then((value) {
       if (value != null) {

@@ -13,34 +13,6 @@ import '../models/model.user.dart';
 Logger logger = Logger();
 
 class MyFirestoreService {
-  static void mAddBabyGalleryDataToFirestore(
-      {required String email,
-      String? caption,
-      required String imgUrl,
-      double? latitude,
-      double? longitude,
-      String? timestamp,
-      String? date,
-      required bool imgFromCamera}) {
-    final FirebaseFirestore firebaseFirestoreRef = FirebaseFirestore.instance;
-
-    firebaseFirestoreRef
-        .collection('USERS')
-        .doc(email)
-        .collection('DIARY')
-        .doc()
-        .set({
-      "email": email,
-      "caption": caption,
-      "imgUrl": imgUrl,
-      "latitude": latitude,
-      "longitude": longitude,
-      "timestamp": timestamp,
-      "date": date,
-      "imgFromCamera": imgFromCamera,
-    });
-  }
-
   static Future<bool> mStoreUserCredential(
       {required FirebaseFirestore firebaseFirestore,
       required UserData user}) async {
@@ -144,6 +116,34 @@ class MyFirestoreService {
     return isLiked;
   }
 
+  static Future<bool> mStoreRatingData({
+    required FirebaseFirestore firebaseFirestore,
+    required String email,
+    required String postId,
+    required int ratingValue,
+  }) async {
+    bool isRated = false;
+    // m: Add new doc (email) to RATER
+    await firebaseFirestore
+        .collection(MyKeywords.POST)
+        .doc(postId)
+        .collection(MyKeywords.RATER)
+        .doc(email)
+        .set({
+      MyKeywords.email: email,
+      MyKeywords.ratingValue: ratingValue,
+      MyKeywords.ts: DateTime.now().millisecondsSinceEpoch
+    }).then((value) async {
+      logger.w("Rated by $email");
+      // m: Update Num Of Like Of This Post
+      await mUpdateRatings(firebaseFirestore, postId);
+      return isRated = true;
+    }).catchError((error, stackTrace) {
+      logger.e(error);
+    });
+    return isRated;
+  }
+
   static Future<bool> mStoreCommentData(
       {required FirebaseFirestore firebaseFirestore,
       required String postId,
@@ -207,7 +207,8 @@ class MyFirestoreService {
 
   static Future<List<Post>> mFetchInitialPost(
       {required FirebaseFirestore firebaseFirestore,
-      required String category}) async {
+      required String category,
+      required UserData userData}) async {
     logger.d("Category to fetch: $category");
     CollectionReference collectionRef =
         firebaseFirestore.collection(MyKeywords.POST);
@@ -225,7 +226,8 @@ class MyFirestoreService {
 
         for (var element in querySnapshot.docs) {
           // m: Create post object for each postData (element)
-          Post? post = await mCreateObject(firebaseFirestore, element);
+          Post? post =
+              await mCreateObject(firebaseFirestore, element, userData);
           if (post != null) {
             posts.add(post);
           }
@@ -269,7 +271,8 @@ class MyFirestoreService {
           });
         */
           // m: Create post object for each postData (element)
-          Post? post = await mCreateObject(firebaseFirestore, element);
+          Post? post =
+              await mCreateObject(firebaseFirestore, element, userData);
           if (post != null) {
             posts.add(post);
           }
@@ -284,11 +287,11 @@ class MyFirestoreService {
     return posts;
   }
 
-  static Future<List<Post>> mFetchMorePosts({
-    required FirebaseFirestore firebaseFirestore,
-    required String category,
-    required String lastVisibleDocumentId,
-  }) async {
+  static Future<List<Post>> mFetchMorePosts(
+      {required FirebaseFirestore firebaseFirestore,
+      required String category,
+      required String lastVisibleDocumentId,
+      required UserData userData}) async {
     CollectionReference collectionRef =
         firebaseFirestore.collection(MyKeywords.POST);
     int itemsPerpage = 10;
@@ -340,7 +343,8 @@ class MyFirestoreService {
           }); */
 
           // m: Create post object for each postData (element)
-          Post? post = await mCreateObject(firebaseFirestore, element);
+          Post? post =
+              await mCreateObject(firebaseFirestore, element, userData);
           if (post != null) {
             posts.add(post);
           }
@@ -361,7 +365,8 @@ class MyFirestoreService {
 
         for (var element in querySnapshot.docs) {
           // m: Create post object for each postData (element)
-          Post? post = await mCreateObject(firebaseFirestore, element);
+          Post? post =
+              await mCreateObject(firebaseFirestore, element, userData);
           if (post != null) {
             posts.add(post);
           }
@@ -408,6 +413,26 @@ class MyFirestoreService {
     });
   }
 
+  static mUpdateRatings(
+      FirebaseFirestore firebaseFirestore, String postId) async {
+    firebaseFirestore
+        .collection(MyKeywords.POST)
+        .doc(postId)
+        .collection(MyKeywords.RATER)
+        .get()
+        .then((value) async {
+      logger.d("Total Num of Ratings: ${value.size}");
+      num totalRatingValue = 0;
+      for (var element in value.docs) {
+        totalRatingValue += element.get(MyKeywords.ratingValue);
+      }
+      num ratings = totalRatingValue / value.size;
+      await firebaseFirestore.collection(MyKeywords.POST).doc(postId).update({
+        MyKeywords.ratings: ratings,
+      });
+    });
+  }
+
   static mUpdateNumOfComments(
       FirebaseFirestore firebaseFirestore, String postId) async {
     firebaseFirestore
@@ -424,7 +449,7 @@ class MyFirestoreService {
   }
 
   static Future<bool> mCheckLikedStatus(FirebaseFirestore firebaseFirestore,
-      QueryDocumentSnapshot<Object?> element) async {
+      QueryDocumentSnapshot<Object?> element, UserData userData) async {
     bool isLiked = false;
 
     await firebaseFirestore
@@ -434,7 +459,7 @@ class MyFirestoreService {
         .get()
         .then((value) {
       for (var doc in value.docs) {
-        if (doc.id.contains(element.get(MyKeywords.email))) {
+        if (doc.id.contains(userData.email!)) {
           return isLiked = true;
         }
       }
@@ -443,6 +468,28 @@ class MyFirestoreService {
       return null;
     });
     return isLiked;
+  }
+
+  static Future<bool> mCheckRatedStatus(FirebaseFirestore firebaseFirestore,
+      QueryDocumentSnapshot<Object?> element, UserData userData) async {
+    bool isRated = false;
+
+    await firebaseFirestore
+        .collection(MyKeywords.POST)
+        .doc(element.id)
+        .collection(MyKeywords.RATER)
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        if (doc.id.contains(userData.email!)) {
+          return isRated = true;
+        }
+      }
+    }).onError((error, stackTrace) {
+      logger.e(error);
+      return null;
+    });
+    return isRated;
   }
 
   static Future<bool> mRemoveMyPost(
@@ -485,29 +532,41 @@ class MyFirestoreService {
   }
 
   static Future<Post?> mCreateObject(FirebaseFirestore firebaseFirestore,
-      QueryDocumentSnapshot<Object?> element) async {
+      QueryDocumentSnapshot<Object?> element, UserData userData) async {
     Post? post;
 
     // m: Check if current user liked this post (element) or not
-    bool isLiked = await mCheckLikedStatus(firebaseFirestore, element);
+    bool isLiked =
+        await mCheckLikedStatus(firebaseFirestore, element, userData);
+    bool isRated =
+        await mCheckRatedStatus(firebaseFirestore, element, userData);
+    int? ratingValue =
+        await mGetRatingValue(firebaseFirestore, element, userData);
     await firebaseFirestore
         .collection(MyKeywords.USER)
         .doc(element.get(MyKeywords.email))
         .get()
-        .then((value) {
+        .then((value) async {
       UserData user = UserData(username: value.get(MyKeywords.username));
+
+      logger.w("Ratings: ${element.get(MyKeywords.ratings)}");
+
       post = Post(
-          postId: element.id,
-          email: element.get(MyKeywords.email),
-          caption: element.get(MyKeywords.caption),
-          imgUri: element.get(MyKeywords.img_uri),
-          numOfLikes: element.get(MyKeywords.num_of_likes),
-          numOfDislikes: element.get(MyKeywords.num_of_dislikes),
-          numOfComments: element.get(MyKeywords.num_of_comments),
-          category: element.get(MyKeywords.category),
-          ts: element.get(MyKeywords.ts),
-          users: user,
-          likedStatus: isLiked);
+        postId: element.id,
+        email: element.get(MyKeywords.email),
+        caption: element.get(MyKeywords.caption),
+        imgUri: element.get(MyKeywords.img_uri),
+        numOfLikes: element.get(MyKeywords.num_of_likes),
+        numOfDislikes: element.get(MyKeywords.num_of_dislikes),
+        numOfComments: element.get(MyKeywords.num_of_comments),
+        category: element.get(MyKeywords.category),
+        ts: element.get(MyKeywords.ts),
+        users: user,
+        ratings: element.get(MyKeywords.ratings),
+        ratingValue: ratingValue ?? 0,
+        likedStatus: isLiked,
+        ratingStatus: isRated,
+      );
 
       // logger.d(post.ts);
     }).onError((error, stackTrace) {
@@ -559,7 +618,7 @@ class MyFirestoreService {
         for (var element in querySnapshot.docs) {
           // m: Create post object for each postData (element)
           if (element.get(MyKeywords.email) == user.email) {
-            Post? post = await mCreateObject(firebaseFirestore, element);
+            Post? post = await mCreateObject(firebaseFirestore, element, user);
             if (post != null) {
               posts.add(post);
             }
@@ -581,7 +640,7 @@ class MyFirestoreService {
 
         for (var element in querySnapshot.docs) {
           // m: Create post object for each postData (element)
-          Post? post = await mCreateObject(firebaseFirestore, element);
+          Post? post = await mCreateObject(firebaseFirestore, element, user);
           if (post != null) {
             posts.add(post);
           }
@@ -615,6 +674,24 @@ class MyFirestoreService {
     });
 
     return user;
+  }
+
+  static Future<int?> mGetRatingValue(FirebaseFirestore firebaseFirestore,
+      QueryDocumentSnapshot<Object?> element, UserData userData) async {
+    int? ratingValue;
+    await firebaseFirestore
+        .collection(MyKeywords.POST)
+        .doc(element.id)
+        .collection(MyKeywords.RATER)
+        .doc(userData.email)
+        .get()
+        .then((value) {
+      ratingValue = value.get(MyKeywords.ratingValue);
+    }).onError((error, stackTrace) {
+      return null;
+    });
+
+    return ratingValue;
   }
 
   //c: Valid For Single image selection

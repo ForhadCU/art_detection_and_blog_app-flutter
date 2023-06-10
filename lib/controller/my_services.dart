@@ -17,6 +17,7 @@ import '../utils/my_image_utility.dart';
 Logger logger = Logger();
 
 class MyServices {
+  
   // m: LOCAL OPERATION
   static Future<List<ImageDetailsModel>?> mPickMultipleImageFromLocal() async {
     try {

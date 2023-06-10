@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +55,7 @@ class MyWidget {
   static Widget vPostShimmering({required BuildContext context}) {
     return GFShimmer(
         child: Container(
-      margin: EdgeInsets.all(12),
+      margin: const EdgeInsets.all(12),
       child: Column(
         children: [
           Row(
@@ -64,9 +63,9 @@ class MyWidget {
               Container(
                   height: MyScreenSize.mGetHeight(context, 8),
                   width: MyScreenSize.mGetWidth(context, 12),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.black26)),
-              SizedBox(
+              const SizedBox(
                 width: 24,
               ),
               Column(
@@ -75,28 +74,28 @@ class MyWidget {
                   Container(
                       height: MyScreenSize.mGetHeight(context, 3),
                       width: MyScreenSize.mGetWidth(context, 60),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.rectangle, color: Colors.black26)),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
                     height: MyScreenSize.mGetHeight(context, 2),
                     width: MyScreenSize.mGetWidth(context, 35),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.rectangle, color: Colors.black26),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Container(
               height: MyScreenSize.mGetHeight(context, 48),
               width: MyScreenSize.mGetWidth(context, 80),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   shape: BoxShape.rectangle, color: Colors.black26)),
         ],
       ),
@@ -106,7 +105,7 @@ class MyWidget {
   static Widget vPostPaginationShimmering({required BuildContext context}) {
     return GFShimmer(
         child: Container(
-      margin: EdgeInsets.all(12),
+      margin: const EdgeInsets.all(12),
       child: Column(
         children: [
           Row(
@@ -114,9 +113,9 @@ class MyWidget {
               Container(
                   height: MyScreenSize.mGetHeight(context, 8),
                   width: MyScreenSize.mGetWidth(context, 12),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.black26)),
-              SizedBox(
+              const SizedBox(
                 width: 24,
               ),
               Column(
@@ -125,28 +124,28 @@ class MyWidget {
                   Container(
                       height: MyScreenSize.mGetHeight(context, 3),
                       width: MyScreenSize.mGetWidth(context, 60),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.rectangle, color: Colors.black26)),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
                     height: MyScreenSize.mGetHeight(context, 2),
                     width: MyScreenSize.mGetWidth(context, 35),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.rectangle, color: Colors.black26),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Container(
               height: MyScreenSize.mGetHeight(context, 10),
               width: MyScreenSize.mGetWidth(context, 80),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   shape: BoxShape.rectangle, color: Colors.black26)),
         ],
       ),
@@ -156,7 +155,7 @@ class MyWidget {
   static vCommentShimmering({required BuildContext context}) {
     return GFShimmer(
         child: Container(
-      margin: EdgeInsets.all(12),
+      margin: const EdgeInsets.all(12),
       child: Column(
         children: [
           Row(
@@ -164,9 +163,9 @@ class MyWidget {
               Container(
                   height: MyScreenSize.mGetHeight(context, 8),
                   width: MyScreenSize.mGetWidth(context, 12),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.black26)),
-              SizedBox(
+              const SizedBox(
                 width: 24,
               ),
               Column(
@@ -175,30 +174,30 @@ class MyWidget {
                   Container(
                       height: MyScreenSize.mGetHeight(context, 3),
                       width: MyScreenSize.mGetWidth(context, 60),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.rectangle, color: Colors.black26)),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
                     height: MyScreenSize.mGetHeight(context, 2),
                     width: MyScreenSize.mGetWidth(context, 35),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.rectangle, color: Colors.black26),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Container(
               height: MyScreenSize.mGetHeight(context, 10),
               width: MyScreenSize.mGetWidth(context, 80),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   shape: BoxShape.rectangle, color: Colors.black26)),
-          SizedBox(
+          const SizedBox(
             height: 36,
           ),
           Row(
@@ -206,9 +205,9 @@ class MyWidget {
               Container(
                   height: MyScreenSize.mGetHeight(context, 8),
                   width: MyScreenSize.mGetWidth(context, 12),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.black26)),
-              SizedBox(
+              const SizedBox(
                 width: 24,
               ),
               Column(
@@ -217,30 +216,30 @@ class MyWidget {
                   Container(
                       height: MyScreenSize.mGetHeight(context, 3),
                       width: MyScreenSize.mGetWidth(context, 60),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.rectangle, color: Colors.black26)),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
                     height: MyScreenSize.mGetHeight(context, 2),
                     width: MyScreenSize.mGetWidth(context, 35),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.rectangle, color: Colors.black26),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Container(
               height: MyScreenSize.mGetHeight(context, 10),
               width: MyScreenSize.mGetWidth(context, 80),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   shape: BoxShape.rectangle, color: Colors.black26)),
-          SizedBox(
+          const SizedBox(
             height: 36,
           ),
           Row(
@@ -248,9 +247,9 @@ class MyWidget {
               Container(
                   height: MyScreenSize.mGetHeight(context, 8),
                   width: MyScreenSize.mGetWidth(context, 12),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.black26)),
-              SizedBox(
+              const SizedBox(
                 width: 24,
               ),
               Column(
@@ -259,28 +258,28 @@ class MyWidget {
                   Container(
                       height: MyScreenSize.mGetHeight(context, 3),
                       width: MyScreenSize.mGetWidth(context, 60),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.rectangle, color: Colors.black26)),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
                     height: MyScreenSize.mGetHeight(context, 2),
                     width: MyScreenSize.mGetWidth(context, 35),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.rectangle, color: Colors.black26),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Container(
               height: MyScreenSize.mGetHeight(context, 10),
               width: MyScreenSize.mGetWidth(context, 80),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   shape: BoxShape.rectangle, color: Colors.black26)),
         ],
       ),
@@ -290,7 +289,7 @@ class MyWidget {
   static vCommentPaginationShimmering({required BuildContext context}) {
     return GFShimmer(
         child: Container(
-      margin: EdgeInsets.all(12),
+      margin: const EdgeInsets.all(12),
       child: Column(
         children: [
           Row(
@@ -298,9 +297,9 @@ class MyWidget {
               Container(
                   height: MyScreenSize.mGetHeight(context, 8),
                   width: MyScreenSize.mGetWidth(context, 12),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.black26)),
-              SizedBox(
+              const SizedBox(
                 width: 24,
               ),
               Column(
@@ -309,28 +308,28 @@ class MyWidget {
                   Container(
                       height: MyScreenSize.mGetHeight(context, 3),
                       width: MyScreenSize.mGetWidth(context, 60),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.rectangle, color: Colors.black26)),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
                     height: MyScreenSize.mGetHeight(context, 2),
                     width: MyScreenSize.mGetWidth(context, 35),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.rectangle, color: Colors.black26),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Container(
               height: MyScreenSize.mGetHeight(context, 6),
               width: MyScreenSize.mGetWidth(context, 80),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   shape: BoxShape.rectangle, color: Colors.black26)),
         ],
       ),
