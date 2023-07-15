@@ -1,4 +1,3 @@
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,7 +32,6 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-
   final String _userName = "user_0012001";
   final String _imgCategory = "all category";
   int _pageIndex = 0;
@@ -81,7 +79,7 @@ class _LandingScreenState extends State<LandingScreen> {
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: MyColors.secondColor,
           elevation: 0,
-          actions: [
+          actions: const [
             // vActionItems(),
           ],
         ),
@@ -276,8 +274,8 @@ class _LandingScreenState extends State<LandingScreen> {
                     )
                   : vItem(index)
               : posts!.length > 1
-                    ? MyWidget.vPostPaginationShimmering(context: context)
-                    : Container();
+                  ? MyWidget.vPostPaginationShimmering(context: context)
+                  : Container();
         }));
   }
 
@@ -568,7 +566,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void mLoadMore() async {
     await MyFirestoreService.mFetchMorePosts(
-      userData: widget.userData,
+            userData: widget.userData,
             firebaseFirestore: firebaseFirestore,
             category: _dropDownValue,
             lastVisibleDocumentId: posts!.last.postId!)
@@ -589,7 +587,8 @@ class _LandingScreenState extends State<LandingScreen> {
   Future<void> mOnClickLikeButton(Post post) async {
     await MyFirestoreService.mStoreLikeData(
             firebaseFirestore: firebaseFirestore,
-            email: post.email!,
+            // email: post.email!,
+            email: widget.userData.email!,
             postId: post.postId!)
         .then((like) {
       if (like != null) {
