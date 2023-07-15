@@ -212,7 +212,7 @@ class MyFirestoreService {
     logger.d("Category to fetch: $category");
     CollectionReference collectionRef =
         firebaseFirestore.collection(MyKeywords.POST);
-    int itemsPerpage = 5;
+    int itemsPerpage = 3;
     List<Post> posts = [];
 
     if (category.contains("all category")) {

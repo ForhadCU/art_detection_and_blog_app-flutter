@@ -68,7 +68,8 @@ dependencies:
   url_launcher: ^6.1.11
   youtube_player_flutter: ^8.1.2
   fluttertoast: ^8.2.2
-  
+  google_maps_flutter:
+
 
 
 dev_dependencies:

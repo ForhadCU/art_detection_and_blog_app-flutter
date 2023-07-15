@@ -9,6 +9,7 @@ import 'package:flutter_application_1/models/model.post.dart';
 import 'package:flutter_application_1/models/model.user.dart';
 import 'package:flutter_application_1/screens/art%20guide/scr.art_guide.dart';
 import 'package:flutter_application_1/screens/landing/pages/comments.dart';
+import 'package:flutter_application_1/screens/landing/pages/map.dart';
 import 'package:flutter_application_1/screens/landing/widgets/dlg_rating.dart';
 import 'package:flutter_application_1/screens/profile/scr_profile.dart';
 import 'package:flutter_application_1/screens/signin/scr_signin.dart';
@@ -186,7 +187,9 @@ class _LandingScreenState extends State<LandingScreen> {
             ),
             leading: const Icon(Icons.location_pin),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return MapView();
+              }));
             },
           ),
           ListTile(
@@ -930,7 +933,7 @@ class _LandingScreenState extends State<LandingScreen> {
           mLoadMore();
         },
         child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(bottom: 20, top: 8, left: 8, right: 8),
             child: MyWidget.vLoadMoreButton()
             // child: MoreLoaderWidget(isMoreLoading: _isMoreDataLoading),
             ));
