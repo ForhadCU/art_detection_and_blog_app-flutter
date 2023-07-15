@@ -252,6 +252,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return CommentsPage(
         post: post,
+        userData: widget.userData,
       );
     }));
   }

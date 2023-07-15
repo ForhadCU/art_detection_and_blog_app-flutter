@@ -1,8 +1,8 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/firestore_service.dart';
 import 'package:flutter_application_1/controller/my_services.dart';
+import 'package:flutter_application_1/models/model.user.dart';
 import 'package:flutter_application_1/utils/my_colors.dart';
 import 'package:flutter_application_1/widgets/my_widget.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
@@ -16,7 +16,8 @@ import '../../../models/model.post.dart';
 
 class CommentsPage extends StatefulWidget {
   final Post post;
-  const CommentsPage({super.key, required this.post});
+  final UserData userData;
+  const CommentsPage({super.key, required this.post, required this.userData});
 
   @override
   State<CommentsPage> createState() => _CommentsPageState();
@@ -27,6 +28,7 @@ class _CommentsPageState extends State<CommentsPage> {
       TextEditingController();
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   late Post _post;
+  late UserData _userData;
   List<Commenter>? _comments;
   final ScrollController _scrollController = ScrollController();
   Logger? logger;
@@ -35,6 +37,7 @@ class _CommentsPageState extends State<CommentsPage> {
   void initState() {
     super.initState();
     _post = widget.post;
+    _userData = widget.userData;
 
     mLoadData();
     // mControlListViewScrolling();
@@ -183,7 +186,8 @@ class _CommentsPageState extends State<CommentsPage> {
     if (_editingControllerComment.value.text.isNotEmpty) {
       String comment = _editingControllerComment.value.text.trim();
       Commenter commenter = Commenter(
-          email: _post.email!,
+          // email: _post.email!,
+          email: _userData.email!,
           text: comment,
           ts: DateTime.now().millisecondsSinceEpoch.toString());
       await MyFirestoreService.mStoreCommentData(
@@ -195,7 +199,8 @@ class _CommentsPageState extends State<CommentsPage> {
           // c: clear comment box
           _editingControllerComment.clear();
           // c: add current user's data to commenter object
-          commenter.user = _post.users;
+          // commenter.user = _post.users;
+          commenter.user = widget.userData  ;
           // c: add new commenter object into comments list
           _comments!.add(commenter);
 // refresh

@@ -485,6 +485,7 @@ class _LandingScreenState extends State<LandingScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return CommentsPage(
         post: post,
+        userData: widget.userData,
       );
     }));
   }
