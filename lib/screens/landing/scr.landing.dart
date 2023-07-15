@@ -14,6 +14,7 @@ import 'package:flutter_application_1/screens/profile/scr_profile.dart';
 import 'package:flutter_application_1/screens/signin/scr_signin.dart';
 import 'package:flutter_application_1/utils/my_date_format.dart';
 import 'package:flutter_application_1/widgets/my_widget.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +39,8 @@ class _LandingScreenState extends State<LandingScreen> {
   final Logger logger = Logger();
   late FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   bool _isDataLoading = true;
+  bool _isMoreDataLoading = true;
+  bool _isNoDataExist = false;
   String _dropDownValue = "All Category";
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   List<Post>? posts;
@@ -179,9 +182,9 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           ListTile(
             title: const Text(
-              "Feedback",
+              "Map",
             ),
-            leading: const Icon(Icons.feedback),
+            leading: const Icon(Icons.location_pin),
             onTap: () {
               Navigator.pop(context);
             },
@@ -273,8 +276,12 @@ class _LandingScreenState extends State<LandingScreen> {
                       child: vItem(index),
                     )
                   : vItem(index)
-              : posts!.length > 1
+              /*   : posts!.length > 1
                   ? MyWidget.vPostPaginationShimmering(context: context)
+                  : Container(); */
+              : posts!.length > 1 && !_isNoDataExist
+                  // ? MyWidget.vPostPaginationShimmering(context: context)
+                  ? vLoadMoreButton()
                   : Container();
         }));
   }
@@ -331,7 +338,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget vCatAndCap(Post post) {
     return Column(
       children: [
-        Row(
+        /* Row(
           children: [
             Container(
               // height: MyScreenSize.mGetHeight(context, 1),
@@ -346,7 +353,7 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
             ),
           ],
-        ),
+        ), */
         const SizedBox(
           height: 4,
         ),
@@ -561,7 +568,8 @@ class _LandingScreenState extends State<LandingScreen> {
       // c: You can trigger pagination or fetch more items here
 
       logger.w("End of List");
-      mLoadMore();
+      // mLoadMore();
+      mCheckMoreDataAvailability();
     }
   }
 
@@ -581,7 +589,11 @@ class _LandingScreenState extends State<LandingScreen> {
         });
       } else {
         logger.w("No Data exist");
+        setState(() {
+          _isNoDataExist = true;
+        });
       }
+      _isMoreDataLoading = false;
     });
   }
 
@@ -891,6 +903,55 @@ class _LandingScreenState extends State<LandingScreen> {
       }
       // c: refresh
       setState(() {});
+    });
+  }
+
+  vLoadMoreButton() {
+    return InkWell(
+        splashColor: Colors.white,
+        onTap: () {
+          /* setState(() {
+            _isMoreDataLoading = true;
+          }); */
+          /* ToastCard(
+            Text("Loading..."),
+            Duration(milliseconds: 100),
+          ); */
+          // Toast.show("Toast plugin app", duration: Toast.lengthShort, gravity:  Toast.bottom);
+          Fluttertoast.showToast(
+              msg: "Loading...",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black87,
+              textColor: Colors.white,
+              fontSize: 14.0);
+
+          mLoadMore();
+        },
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MyWidget.vLoadMoreButton()
+            // child: MoreLoaderWidget(isMoreLoading: _isMoreDataLoading),
+            ));
+  }
+
+  void mCheckMoreDataAvailability() async {
+    await MyFirestoreService.mFetchMorePosts(
+            userData: widget.userData,
+            firebaseFirestore: firebaseFirestore,
+            category: _dropDownValue,
+            lastVisibleDocumentId: posts!.last.postId!)
+        .then((value) {
+      logger.w(value.length);
+      if (value.isEmpty) {
+        logger.w("No Data exist");
+        /*  ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("No Data exist"))); */
+        setState(() {
+          _isNoDataExist = true;
+        });
+      }
     });
   }
 }

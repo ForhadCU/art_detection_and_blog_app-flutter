@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_application_1/screens/landing/pages/comments.dart';
 import 'package:flutter_application_1/screens/signin/scr_signin.dart';
 import 'package:flutter_application_1/utils/my_date_format.dart';
 import 'package:flutter_application_1/widgets/my_widget.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:logger/logger.dart';
 
@@ -26,20 +26,16 @@ class MyPostScreen extends StatefulWidget {
 }
 
 class _MyPostScreenState extends State<MyPostScreen> {
-  final String _userName = "user_0012001";
   final String _imgCategory = "all category";
-  final String _userEmail = "user_0012001@gmail.com";
-  int _pageIndex = 0;
   final Logger logger = Logger();
   late FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   bool _isDataLoading = true;
+  bool _isNoDataExist = false;
+
   String _dropDownValue = "All Category";
-  String _likes = "23";
-  String _comments = "30";
-  final String _uploadedTime = "12, june 2023";
-  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   List<Post>? posts;
-  late ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController = ScrollController();
   late CollectionReference _collectionReferencePOST;
   late CollectionReference _collectionReferenceLIKER;
 
@@ -90,19 +86,35 @@ class _MyPostScreenState extends State<MyPostScreen> {
         controller: _scrollController,
         itemCount: posts!.length + 1,
         itemBuilder: ((context, index) {
+          /* 
           return index < posts!.length
               ? vItem(index)
               : MyWidget.vPostPaginationShimmering(context: context);
+      */
+          return index < posts!.length
+              ? /* index == 0
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                              top: MyScreenSize.mGetHeight(context, 11)),
+                          child: vItem(index))
+                      : */
+              vItem(index)
+              : posts!.length > 1 && !_isNoDataExist
+                  // ? MyWidget.vPostPaginationShimmering(context: context)
+                  ? vLoadMoreButton()
+                  : Container();
         }));
   }
 
   Widget vCatAndCap(Post post) {
     return Column(
       children: [
-        Row(
+        /* Row(
           children: [
             Container(
               // height: MyScreenSize.mGetHeight(context, 1),
+              margin: EdgeInsets.symmetric(horizontal: 54, vertical: 8),
+
               padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
               alignment: Alignment.center,
               decoration: const BoxDecoration(
@@ -114,7 +126,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
               ),
             ),
           ],
-        ),
+        ), */
         const SizedBox(
           height: 4,
         ),
@@ -280,7 +292,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
   void mLoadData() async {
     logger.d("Loading post...");
-    MyFirestoreService.mFetchMyPosts(
+    await MyFirestoreService.mFetchMyPosts(
             firebaseFirestore: firebaseFirestore,
             category: _imgCategory,
             user: widget.userData)
@@ -327,8 +339,58 @@ class _MyPostScreenState extends State<MyPostScreen> {
       // c: You can trigger pagination or fetch more items here
 
       logger.w("End of List");
-      mLoadMore();
+      // mLoadMore();
+      mCheckMoreDataAvailability();
     }
+  }
+
+  void mCheckMoreDataAvailability() async {
+    await MyFirestoreService.mFetchMorePosts(
+            userData: widget.userData,
+            firebaseFirestore: firebaseFirestore,
+            category: _dropDownValue,
+            lastVisibleDocumentId: posts!.last.postId!)
+        .then((value) {
+      logger.w(value.length);
+      if (value.isEmpty) {
+        logger.w("No Data exist");
+        /*  ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("No Data exist"))); */
+        setState(() {
+          _isNoDataExist = true;
+        });
+      }
+    });
+  }
+
+  vLoadMoreButton() {
+    return InkWell(
+        splashColor: Colors.white,
+        onTap: () {
+          /* setState(() {
+            _isMoreDataLoading = true;
+          }); */
+          /* ToastCard(
+            Text("Loading..."),
+            Duration(milliseconds: 100),
+          ); */
+          // Toast.show("Toast plugin app", duration: Toast.lengthShort, gravity:  Toast.bottom);
+          Fluttertoast.showToast(
+              msg: "Loading...",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black87,
+              textColor: Colors.white,
+              fontSize: 14.0);
+
+          mLoadMore();
+        },
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MyWidget.vLoadMoreButton()
+            // child: MoreLoaderWidget(isMoreLoading: _isMoreDataLoading),
+            ));
   }
 
   void mLoadMore() async {
@@ -347,6 +409,9 @@ class _MyPostScreenState extends State<MyPostScreen> {
         });
       } else {
         logger.w("No Data exist");
+        setState(() {
+          _isNoDataExist = true;
+        });
       }
     });
   }

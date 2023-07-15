@@ -294,7 +294,7 @@ class MyFirestoreService {
       required UserData userData}) async {
     CollectionReference collectionRef =
         firebaseFirestore.collection(MyKeywords.POST);
-    int itemsPerpage = 10;
+    int itemsPerpage = 3;
     List<Post> posts = [];
 
     DocumentSnapshot<Object?> laslastVisibleDoc =
@@ -618,6 +618,8 @@ class MyFirestoreService {
         for (var element in querySnapshot.docs) {
           // m: Create post object for each postData (element)
           if (element.get(MyKeywords.email) == user.email) {
+            logger.d(
+                "Post's user email: ${element.get(MyKeywords.email)} \n My email: ${user.email}");
             Post? post = await mCreateObject(firebaseFirestore, element, user);
             if (post != null) {
               posts.add(post);

@@ -3,6 +3,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
+import '../utils/custom_text.dart';
 import '../utils/my_colors.dart';
 import '../utils/my_screensize.dart';
 
@@ -26,6 +27,23 @@ class MyWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
           child: Text(buttonText ?? "Dismiss"),
         )).show();
+  }
+
+    static Widget vLoadMoreButton() {
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      decoration: BoxDecoration(
+          color: Color.fromARGB(255, 224, 135, 0), borderRadius: BorderRadius.circular(16)),
+      child:/*  isMoreDataLoading
+          ? Container(
+              child: CircularProgressIndicator(backgroundColor: Colors.white),
+            )
+          : */ CustomText(
+              text: "Load more",
+              fontcolor: Colors.white,
+            ),
+    );
   }
 
   static Widget vButtonProgressLoader(
