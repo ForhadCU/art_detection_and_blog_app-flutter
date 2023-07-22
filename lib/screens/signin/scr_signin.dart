@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +28,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  Color enabled = const Color.fromARGB(255, 63, 56, 89);
+  // Color enabled = const Color.fromARGB(255, 63, 56, 89);
+  Color enabled = MyColors.secondColor;
   Color enabledtxt = Colors.white;
   Color deaible = Colors.grey;
-  Color backgroundColor = const Color(0xFF1F1A30);
+  Color backgroundColor = MyColors.secondColor;
   bool ispasswordev = true;
   FormData? selected;
   bool isLoading = false;
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     firebaseAuth = FirebaseAuth.instance;
     // c: check already signed in user
- /*    User? user = MyAuthenticationService.mCheckUserSignInStatus(
+    /*    User? user = MyAuthenticationService.mCheckUserSignInStatus(
         firebaseAuth: firebaseAuth);
     if (user != null) {
       mLoadUserData(user);
@@ -65,13 +65,12 @@ class _LoginScreenState extends State<LoginScreen> {
             end: Alignment.bottomRight,
             stops: const [0.1, 0.4, 0.7, 0.9],
             colors: [
-              MyColors.firstColor.withOpacity(0.8),
-              MyColors.firstColor,
-              MyColors.firstColor,
-              MyColors.firstColor
+              MyColors.secondColor5.withOpacity(0.8),
+              MyColors.secondColor5,
+              MyColors.secondColor5,
+              MyColors.secondColor5
             ],
           ),
-         
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -82,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   elevation: 5,
                   color:
                       // const Color.fromARGB(255, 171, 211, 250).withOpacity(0.4),
-                      MyColors.fifthColor,
+                      MyColors.secondColor4,
                   child: Container(
                     width: 400,
                     padding: const EdgeInsets.all(40.0),
@@ -260,7 +259,8 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       style: ElevatedButton.styleFrom(
           fixedSize: Size(MyScreenSize.mGetWidth(context, 60), 40),
-          backgroundColor: MyColors.firstColor,
+          // backgroundColor: MyColors.firstColor,
+          backgroundColor: MyColors.secondColor,
           padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0))),
@@ -305,7 +305,8 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           child: Text("Sign up",
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
+                  color: MyColors.secondColor,
+                  // color: Colors.white.withOpacity(0.9),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
                   fontSize: 14)),

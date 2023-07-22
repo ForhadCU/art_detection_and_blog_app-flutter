@@ -9,8 +9,8 @@ import 'package:flutter_application_1/models/model.post.dart';
 import 'package:flutter_application_1/models/model.user.dart';
 import 'package:flutter_application_1/screens/art%20guide/scr.art_guide.dart';
 import 'package:flutter_application_1/screens/landing/pages/comments.dart';
-import 'package:flutter_application_1/screens/landing/pages/map.dart';
 import 'package:flutter_application_1/screens/landing/widgets/dlg_rating.dart';
+import 'package:flutter_application_1/screens/my_map/scr.map.dart';
 import 'package:flutter_application_1/screens/profile/scr_profile.dart';
 import 'package:flutter_application_1/screens/signin/scr_signin.dart';
 import 'package:flutter_application_1/utils/my_date_format.dart';
@@ -78,7 +78,7 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     logger.v("Build: Landing Screen");
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.secondColor5,
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: MyColors.secondColor,
@@ -91,7 +91,8 @@ class _LandingScreenState extends State<LandingScreen> {
             width: MyScreenSize.mGetWidth(context, 70), child: vDrawerItems()),
         floatingActionButton: FloatingActionButton(
           shape: const CircleBorder(),
-          backgroundColor: MyColors.firstColor,
+          // backgroundColor: MyColors.firstColor,
+          backgroundColor: MyColors.secondColor,
           onPressed: () {
             mShowBottomSheet();
           },
@@ -188,7 +189,7 @@ class _LandingScreenState extends State<LandingScreen> {
             leading: const Icon(Icons.location_pin),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return MapView();
+                return const MapIFrameScreen();
               }));
             },
           ),
@@ -374,8 +375,8 @@ class _LandingScreenState extends State<LandingScreen> {
     Post post = posts![index];
     return GFCard(
       // color: MyColors.thirdColor.withOpacity(0.8),
-
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      color: MyColors.secondColor4,
+      margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
       elevation: 5,
       boxFit: BoxFit.cover,
       titlePosition: GFPosition.start,
@@ -386,15 +387,20 @@ class _LandingScreenState extends State<LandingScreen> {
 
       showImage: true,
       title: GFListTile(
-        margin: const EdgeInsets.only(bottom: 6),
+        margin: const EdgeInsets.only(bottom: 10),
         shadow: const BoxShadow(color: Colors.white),
-        color: Colors.white,
+        // color: Colors.white,
+        color: MyColors.secondColor3,
+
         avatar: const GFAvatar(
           size: 24,
           backgroundImage: AssetImage('assets/images/user.png'),
         ),
         titleText: post.users!.username,
-        subTitleText: mFormatDateTime(post),
+        listItemTextColor: Colors.white,
+        // subTitleText: mFormatDateTime(post),
+        subTitle: Text(mFormatDateTime(post), style:  TextStyle(color: Colors.white),),
+        
       ),
       content: vCatAndCap(post),
       buttonBar: GFButtonBar(
@@ -723,6 +729,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 // backgroundColor: post.likeStatus!
                 ? MyColors.thirdColor
                 : Colors.black12 /* GFColors.PRIMARY */,
+                // : MyColors.secondColor5 /* GFColors.PRIMARY */,
             size: GFSize.SMALL,
             child: Icon(
               Icons.star_border,
@@ -735,7 +742,8 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           const Text(
             "Ratings",
-            style: TextStyle(color: Colors.black54),
+            style: TextStyle(color: Color(0x89000000)),
+            // style: TextStyle(color: MyColors.secondColor5),
           ),
           const SizedBox(
             height: 4,
@@ -933,7 +941,8 @@ class _LandingScreenState extends State<LandingScreen> {
           mLoadMore();
         },
         child: Padding(
-            padding: const EdgeInsets.only(bottom: 20, top: 8, left: 8, right: 8),
+            padding:
+                const EdgeInsets.only(bottom: 20, top: 8, left: 8, right: 8),
             child: MyWidget.vLoadMoreButton()
             // child: MoreLoaderWidget(isMoreLoading: _isMoreDataLoading),
             ));

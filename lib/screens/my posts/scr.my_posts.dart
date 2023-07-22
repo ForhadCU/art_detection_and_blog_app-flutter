@@ -68,14 +68,15 @@ class _MyPostScreenState extends State<MyPostScreen> {
   Widget build(BuildContext context) {
     logger.v("Build: Landing Screen");
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.secondColor5,
         appBar: AppBar(
+          
           title: const Text(
             "My Posts",
-            style: TextStyle(color: MyColors.secondColor),
+            style: TextStyle(color: Colors.white),
           ),
-          iconTheme: const IconThemeData(color: MyColors.secondColor),
-          backgroundColor: Colors.white,
+          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: MyColors.secondColor,
           elevation: 0,
         ),
         body: vHome());
@@ -143,7 +144,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
   Widget vItem(int index) {
     Post post = posts![index];
     return GFCard(
-      // color: Colors.white,
+      color: MyColors.secondColor4,
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 5,
       boxFit: BoxFit.cover,
@@ -157,13 +158,17 @@ class _MyPostScreenState extends State<MyPostScreen> {
       title: GFListTile(
         margin: const EdgeInsets.only(bottom: 6),
         shadow: const BoxShadow(color: Colors.white),
-        color: Colors.white,
+        color: MyColors.secondColor3,
         avatar: const GFAvatar(
           size: 24,
           backgroundImage: AssetImage('assets/images/user.png'),
         ),
         titleText: post.users!.username,
-        subTitleText: mFormatDateTime(post),
+        listItemTextColor: Colors.white,
+        // subTitleText: mFormatDateTime(post),
+        subTitle: Text(mFormatDateTime(post), style:  const TextStyle(color: Colors.white),),
+        
+
       ),
       content: vCatAndCap(post),
       buttonBar: GFButtonBar(

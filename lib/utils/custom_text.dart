@@ -21,6 +21,7 @@ class CustomText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
+    
     textAlign: textAlign,
 
         style: TextStyle(

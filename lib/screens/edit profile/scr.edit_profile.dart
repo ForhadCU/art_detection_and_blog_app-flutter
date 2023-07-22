@@ -74,14 +74,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: MyColors.thirdColor,
+      backgroundColor: MyColors.secondColor4,
       appBar: AppBar(
         title: const Text(
           "Edit Profile",
-          style: TextStyle(color: MyColors.secondColor),
+          style: TextStyle(color: Colors.white),
         ),
-        iconTheme: const IconThemeData(color: MyColors.secondColor),
-        backgroundColor: MyColors.thirdColor,
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: MyColors.secondColor,
         elevation: 0,
       ),
       body: Container(
@@ -92,10 +92,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             end: Alignment.bottomRight,
             stops: const [0.1, 0.4, 0.7, 0.9],
             colors: [
-              MyColors.thirdColor.withOpacity(0.8),
-              MyColors.thirdColor,
-              MyColors.thirdColor,
-              MyColors.thirdColor
+              MyColors.secondColor4.withOpacity(0.8),
+              MyColors.secondColor4,
+              MyColors.secondColor4,
+              MyColors.secondColor4
             ],
           ),
         ),
@@ -216,7 +216,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         style: ElevatedButton.styleFrom(
             /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
                 MyScreenSize.mGetHeight(context, 7)), */
-            backgroundColor: MyColors.thirdColor,
+            backgroundColor: MyColors.secondColor,
             // backgroundColor: const Color(0xFF2697FF),
             padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
             shape: RoundedRectangleBorder(

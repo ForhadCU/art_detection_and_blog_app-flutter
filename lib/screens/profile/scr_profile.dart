@@ -112,12 +112,12 @@ class _ProfilePageState extends State<ProfilePage> {
         color: MyColors.fourthColor,
         image: const DecorationImage(
             fit: BoxFit.contain,
-            // image: AssetImage('images/profile.png'),
+            image: AssetImage('assets/images/profile_pic.jpeg'),
             // image: AssetImage("assets/images/user.png"),
-            image: NetworkImage(
+/*             image: NetworkImage(
                 "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg6X-MjDqDlh3z14MA3U9RgogW64BBMHzpZijczfoZNbpxBDj_tqvvWAdzvrqX_KWvs92nF4r-AU-i4AXW0pch8AAbgnrawaLjMCTKgdkF1jhtnXsrQ-A5pNXKXPyGWR69YHm5Hr9CQxMdMvFnCyM4fNZyR9PZa3PuOBbSeFU-LApOxvOx1_J5Vn_rLuQ/w640-h640/images%20(5)%20(11).jpeg")),
-      ),
-    );
+ */      
+      )));
   }
 
   vUserNameAndEmail() {
@@ -169,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 }));
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: MyColors.firstColor,
+                  backgroundColor: MyColors.secondColor,
                   fixedSize: Size(0, MyScreenSize.mGetHeight(context, 3.5))),
               child: const Row(
                 children: [
@@ -197,7 +197,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 }));
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: MyColors.firstColor,
+                  // backgroundColor: MyColors.firstColor,
+                  backgroundColor: MyColors.secondColor,
                   fixedSize: Size(0, MyScreenSize.mGetHeight(context, 3.5))),
               child: const Row(
                 children: [

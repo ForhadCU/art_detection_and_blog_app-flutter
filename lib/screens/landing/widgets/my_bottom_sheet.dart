@@ -84,8 +84,9 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              color: MyColors.firstColor,
-              height: MyScreenSize.mGetHeight(context, 8),
+              // color: MyColors.firstColor,
+              color: MyColors.secondColor,
+              height: MyScreenSize.mGetHeight(context, 6),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -105,7 +106,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
-                          color: MyColors.firstColor,
+                          // color: MyColors.firstColor,
+                          color: MyColors.secondColor,
                           strokeWidth: 1,
                         ),
                       ),
@@ -225,7 +227,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                                 prefixIcon: Icon(
                                                   Icons.file_upload,
                                                   size: 24,
-                                                  color: MyColors.firstColor,
+                                                  // color: MyColors.firstColor,
+                                                  color: MyColors.secondColor,
                                                 ),
                                                 label: CustomText(
                                                   text: 'Local',
@@ -279,7 +282,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                                 prefixIcon: Icon(
                                                   Icons.camera,
                                                   size: 24,
-                                                  color: MyColors.firstColor,
+                                                  // color: MyColors.firstColor,
+                                                  color: MyColors.secondColor,
                                                 ),
                                                 label: CustomText(
                                                   text: 'Camera',
@@ -361,7 +365,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                               horizontal: 12, vertical: 10),
                           child: _isScanning
                               ? MyWidget.vButtonProgressLoader(
-                                  color: MyColors.thirdColor,
+                                  color: MyColors.secondColor,
                                   width: 24,
                                   height: 24,
                                   labelText: "Scanning...")
@@ -373,7 +377,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                     Expanded(
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                            backgroundColor: MyColors.firstColor),
+                                            // backgroundColor: MyColors.firstColor),
+                                            backgroundColor: MyColors.secondColor),
                                         onPressed: () {
                                           Navigator.pop(context);
                                           // mCallBack();
@@ -403,7 +408,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                               ? ElevatedButton(
                                                   style: ElevatedButton.styleFrom(
                                                       backgroundColor:
-                                                          MyColors.firstColor),
+                                                          // MyColors.firstColor),
+                                                          MyColors.secondColor),
                                                   onPressed: () {
                                                     _imgDetailModelList.isNotEmpty
                                                         ? {
@@ -636,7 +642,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
 
   Widget vPostUploadButton() {
     return ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: MyColors.firstColor),
+        // style: ElevatedButton.styleFrom(backgroundColoColor(0xFFDE5499)lor),
+        style: ElevatedButton.styleFrom(backgroundColor: MyColors.secondColor),
         onPressed: () async {
           if (_isReadyForUpload) {
             setState(() {

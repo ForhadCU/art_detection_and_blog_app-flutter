@@ -1,4 +1,3 @@
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,10 +35,10 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   // Color enabled = const Color.fromARGB(255, 63, 56, 89);
-  Color enabled = const Color.fromARGB(255, 63, 56, 89);
+  Color enabled = MyColors.secondColor3;
   Color enabledtxt = Colors.white;
   Color deaible = Colors.grey;
-  Color backgroundColor = const Color(0xFF1F1A30);
+  Color backgroundColor = MyColors.secondColor;
   bool ispasswordev = true;
   Logger logger = Logger();
 
@@ -77,10 +76,10 @@ class _SignupScreenState extends State<SignupScreen> {
             end: Alignment.bottomRight,
             stops: const [0.1, 0.4, 0.7, 0.9],
             colors: [
-              MyColors.firstColor.withOpacity(0.8),
-              MyColors.firstColor,
-              MyColors.firstColor,
-              MyColors.firstColor
+              MyColors.secondColor5.withOpacity(0.8),
+              MyColors.secondColor5,
+              MyColors.secondColor5,
+              MyColors.secondColor5
             ],
           ),
         ),
@@ -91,7 +90,8 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 Card(
                   elevation: 5,
-                  color: MyColors.fifthColor,
+                  // color: MyColors.fifthColor,
+                  color: MyColors.secondColor4,
                   child: Container(
                     width: MyScreenSize.mGetWidth(context, 95),
                     padding: const EdgeInsets.all(35.0),
@@ -206,7 +206,8 @@ class _SignupScreenState extends State<SignupScreen> {
         style: ElevatedButton.styleFrom(
             /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
                 MyScreenSize.mGetHeight(context, 7)), */
-            backgroundColor: MyColors.firstColor,
+            // backgroundColor: MyColors.firstColor,
+            backgroundColor: MyColors.secondColor,
             // backgroundColor: const Color(0xFF2697FF),
             padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
             shape: RoundedRectangleBorder(
@@ -450,7 +451,6 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-
   Widget _vCreateAccountText() {
     return const Text(
       "Create your account",
@@ -489,7 +489,8 @@ class _SignupScreenState extends State<SignupScreen> {
           },
           child: Text("Sing in",
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
+                  // color: Colors.white.withOpacity(0.9),
+                  color: MyColors.secondColor,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
                   fontSize: 14)),
@@ -497,7 +498,6 @@ class _SignupScreenState extends State<SignupScreen> {
       ],
     );
   }
-
 
   bool mCheckInputValidation() {
     if (usernameController.value.text.isNotEmpty &&
