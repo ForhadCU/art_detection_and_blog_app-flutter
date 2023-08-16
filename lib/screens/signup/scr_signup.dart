@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/my_date_format.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:logger/logger.dart';
 
 import '../../controller/my_authentication_service.dart';
@@ -196,33 +197,34 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _vSignupButton() {
-    return ElevatedButton(
-        onPressed: () {
-          setState(() {
-            isLoading = true;
-            mSignUpOperation();
-          });
-        },
-        style: ElevatedButton.styleFrom(
-            /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
+    return !isLoading
+        ? ElevatedButton(
+            onPressed: () {
+              setState(() {
+                isLoading = true;
+                mSignUpOperation();
+              });
+            },
+            style: ElevatedButton.styleFrom(
+                /* fixedSize: Size(MyScreenSize.mGetWidth(context, 60),
                 MyScreenSize.mGetHeight(context, 7)), */
-            // backgroundColor: MyColors.firstColor,
-            backgroundColor: MyColors.secondColor,
-            // backgroundColor: const Color(0xFF2697FF),
-            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0))),
-        child: !isLoading
-            ? const Text(
-                "Sign Up",
-                style: TextStyle(
-                  color: Colors.white,
-                  letterSpacing: 0.5,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            : MyWidget.vButtonProgressLoader(labelText: "Signing up..."));
+                // backgroundColor: MyColors.firstColor,
+                backgroundColor: MyColors.secondColor,
+                // backgroundColor: const Color(0xFF2697FF),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 24),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0))),
+            child: const Text(
+              "Sign Up",
+              style: TextStyle(
+                color: Colors.white,
+                letterSpacing: 0.5,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ) /* MyWidget.vButtonProgressLoader(labelText: "Signing up...") */)
+        : const GFLoader();
   }
 
   Widget _vConfirmPass() {
@@ -395,7 +397,7 @@ class _SignupScreenState extends State<SignupScreen> {
           enabledBorder: InputBorder.none,
           border: InputBorder.none,
           prefixIcon: Icon(
-            Icons.phone_android_rounded,
+            Icons.call,
             color: selected == FormData.Phone ? enabledtxt : deaible,
             size: 20,
           ),
@@ -433,7 +435,7 @@ class _SignupScreenState extends State<SignupScreen> {
           enabledBorder: InputBorder.none,
           border: InputBorder.none,
           prefixIcon: Icon(
-            Icons.title,
+            Icons.person,
             color: selected == FormData.UserName ? enabledtxt : deaible,
             size: 20,
           ),
@@ -542,9 +544,19 @@ class _SignupScreenState extends State<SignupScreen> {
                     ts: DateTime.now().millisecondsSinceEpoch.toString());
                 // c: store the users data in to Firestore
                 await MyFirestoreService.mStoreUserCredential(
-                    firebaseFirestore: firebaseFirestore, user: users);
+                    firebaseFirestore: firebaseFirestore, users: users);
 
-                Future.delayed(const Duration(milliseconds: 1)).then((value) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    backgroundColor: Colors.yellow,
+                    content: Text(
+                      "Email verification has been sent",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    )));
+
+                /* Future.delayed(const Duration(milliseconds: 1)).then((value) {
                   MyWidget.vShowWarnigDialog(
                           context: context,
                           message: "Email verification has been sent",
@@ -554,9 +566,18 @@ class _SignupScreenState extends State<SignupScreen> {
                                 email: user.email!),
                             MyServices.mExitApp()
                           });
-                });
+                }); */
               } else {
-                AwesomeDialog(
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Text(
+                      "Sign up error",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    )));
+                /* AwesomeDialog(
                     context: context,
                     dialogType: DialogType.warning,
                     title: "Sign up error",
@@ -570,28 +591,58 @@ class _SignupScreenState extends State<SignupScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4)),
                       child: const Text("Dismiss"),
-                    )).show();
+                    )).show(); */
               }
             });
           } else {
             await Future.delayed((const Duration(milliseconds: 1)))
                 .then((value) {
-              MyWidget.vShowWarnigDialog(
-                  context: context, message: "Username already exist");
+              /*    MyWidget.vShowWarnigDialog(
+                  context: context, message: "Username already exist"); */
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    "Username already exist",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500),
+                  )));
             });
           }
         } else {
-          MyWidget.vShowWarnigDialog(
-              context: context, message: "Password incorrect");
+             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            "Password incorrect",
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+          )));
+        /*   MyWidget.vShowWarnigDialog(
+              context: context, message: "Password incorrect"); */
         }
       } else {
-        MyWidget.vShowWarnigDialog(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            "Password should be at least 6 characters",
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+          )));
+       /*  MyWidget.vShowWarnigDialog(
             context: context,
-            message: "Password should be at least 6 characters");
+            message: "Password should be at least 6 characters"); */
       }
     } else {
       // m: show alert
-      MyWidget.vShowWarnigDialog(context: context, message: "Input required*");
+      // MyWidget.vShowWarnigDialog(context: context, message: "Input required*");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            "Input required*",
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+          )));
     }
 
     setState(() {

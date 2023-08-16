@@ -107,11 +107,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        vRememberMe(),
+                        vSignInButton(),
                         const SizedBox(
                           height: 20,
                         ),
-                        vSignInButton(),
+                        vRememberMe(),
                       ],
                     ),
                   ),
@@ -250,23 +250,24 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget vSignInButton() {
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          isLoading = true;
-        });
-        mSignInProcess();
-      },
-      style: ElevatedButton.styleFrom(
-          fixedSize: Size(MyScreenSize.mGetWidth(context, 60), 40),
-          // backgroundColor: MyColors.firstColor,
-          backgroundColor: MyColors.secondColor,
-          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0))),
-      child: isLoading
-          ? MyWidget.vButtonProgressLoader(labelText: "Singing...")
-          : const Text(
+    return isLoading
+        // ? MyWidget.vButtonProgressLoader(labelText: "Singing...")
+        ? const GFLoader()
+        : ElevatedButton(
+            onPressed: () {
+              setState(() {
+                isLoading = true;
+              });
+              mSignInProcess();
+            },
+            style: ElevatedButton.styleFrom(
+                fixedSize: Size(MyScreenSize.mGetWidth(context, 60), 40),
+                // backgroundColor: MyColors.firstColor,
+                backgroundColor: MyColors.secondColor,
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0))),
+            child: const Text(
               "Login",
               style: TextStyle(
                 color: Colors.white,
@@ -275,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-    );
+          );
   }
 
   Widget vSigninGuideText2() {
@@ -352,14 +353,15 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         } else {
           Future.delayed(const Duration(milliseconds: 1)).then((value) {
-            MyWidget.vShowWarnigDialog(
-                    context: context,
-                    buttonText: "Check email",
-                    message: "Email Verification",
-                    desc: "Email is not verified. Please check your email.")
-                .then((value) {
-              MyServices.mLaunchGmailInbox(email: email);
-            });
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.yellow,
+                content: Text(
+                  "Email verification has been sent",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                )));
             setState(() {
               isLoading = false;
             });
@@ -368,8 +370,19 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         String e = await response;
         Future.delayed(const Duration(milliseconds: 1)).then((value) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(
+                "Sign in error",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+              )));
+          /* 
           MyWidget.vShowWarnigDialog(
               context: context, message: "Sign in error", desc: e.toString());
+       */
         });
         setState(() {
           isLoading = false;
@@ -380,7 +393,14 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         isLoading = false;
       });
-      MyWidget.vShowWarnigDialog(context: context, message: "Input required*");
+      // MyWidget.vShowWarnigDialog(context: context, message: "Input required*");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            "Input required*",
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+          )));
     }
   }
 
@@ -404,17 +424,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   vRememberMe() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         GFCheckbox(
-            size: GFSize.SMALL,
+            activeIcon: const Icon(Icons.check, size: 8, color: GFColors.WHITE),
+            size: 12,
             onChanged: (value) {
               setState(() {
                 isRememberd = !isRememberd;
               });
             },
             value: isRememberd),
-        const Text("Remember me")
+        const Text("Do you want to save this session?")
       ],
     );
   }

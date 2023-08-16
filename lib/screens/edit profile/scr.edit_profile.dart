@@ -1,10 +1,10 @@
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/landing/scr.landing.dart';
 import 'package:flutter_application_1/utils/my_date_format.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:logger/logger.dart';
 
 import '../../../controller/firestore_service.dart';
@@ -35,7 +35,6 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-
   // Color enabled = const Color.fromARGB(255, 63, 56, 89);
   Color enabled = MyColors.fourthColor;
   Color enabledtxt = Colors.white;
@@ -83,6 +82,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: MyColors.secondColor,
         elevation: 0,
+        actions: [
+          InkWell(
+              onTap: () {
+                setState(() {
+                  isLoading = true;
+                  mUpdateOperation();
+                });
+              },
+              child: !isLoading
+                  ? const Icon(
+                      Icons.save,
+                      color: Colors.white,
+                      // size: 24,
+                    )
+                  : const GFLoader()),
+          const SizedBox(
+            width: 24,
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -149,11 +167,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      _vAddressLocation(),
+                      // _vAddressLocation(),
                       const SizedBox(
                         height: 25,
                       ),
-                      _vUpdateButton(),
+                      // _vUpdateButton(),
                     ],
                   ),
                 ),
@@ -179,7 +197,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0),
           color: selected == FormData.dob ? enabled : backgroundColor),
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
           mShowDatePicker();
@@ -190,8 +208,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
           decoration: InputDecoration(
               enabledBorder: InputBorder.none,
               border: InputBorder.none,
-              prefixIcon: Icon(
-                Icons.calendar_today,
+              suffixIcon: Icon(
+                Icons.edit,
                 color: deaible,
                 size: 20,
               ),
@@ -205,7 +223,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _vUpdateButton() {
+  /*  Widget _vUpdateButton() {
     return ElevatedButton(
         onPressed: () {
           setState(() {
@@ -232,7 +250,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
               )
             : MyWidget.vButtonProgressLoader(labelText: "Updating..."));
-  }
+  } */
 
   Widget _vPhone() {
     return Container(
@@ -242,7 +260,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         borderRadius: BorderRadius.circular(12.0),
         color: selected == FormData.Phone ? enabled : backgroundColor,
       ),
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(8.0),
       child: TextField(
         controller: phoneController,
         onTap: () {
@@ -254,8 +272,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         decoration: InputDecoration(
           enabledBorder: InputBorder.none,
           border: InputBorder.none,
-          prefixIcon: Icon(
-            Icons.phone_android_rounded,
+          suffixIcon: Icon(
+            Icons.edit,
             color: selected == FormData.Phone ? enabledtxt : deaible,
             size: 20,
           ),
@@ -281,8 +299,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         borderRadius: BorderRadius.circular(12.0),
         color: selected == FormData.Email ? enabled : backgroundColor,
       ),
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(8.0),
       child: TextField(
+        textAlign: TextAlign.start,
         controller: usernameController,
         onTap: () {
           setState(() {
@@ -291,9 +310,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         },
         decoration: InputDecoration(
           enabledBorder: InputBorder.none,
+          // contentPadding: EdgeInsets.symmetric(horizontal: 12,),
           border: InputBorder.none,
-          prefixIcon: Icon(
-            Icons.title,
+          suffixIcon: Icon(
+            Icons.edit,
             color: selected == FormData.UserName ? enabledtxt : deaible,
             size: 20,
           ),
@@ -354,8 +374,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
           decoration: InputDecoration(
               enabledBorder: InputBorder.none,
               border: InputBorder.none,
-              prefixIcon: Icon(
-                Icons.location_pin,
+              suffixIcon: Icon(
+                Icons.edit,
                 color: deaible,
                 size: 20,
               ),
@@ -425,7 +445,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
                 child: const Text("Go to Home"),
               )).show();
-          
         }
 
                 /*  else {

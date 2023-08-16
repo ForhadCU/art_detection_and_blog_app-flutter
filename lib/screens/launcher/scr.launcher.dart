@@ -37,6 +37,7 @@ class _LauncherScreenState extends State<LauncherScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
         body: Container(
             height: MyScreenSize.mGetHeight(context, 100),
             width: MyScreenSize.mGetWidth(context, 100),
@@ -74,6 +75,7 @@ class _LauncherScreenState extends State<LauncherScreen> {
   }
 
   void mGoForward(User user, UserData userData) {
+    // m: Go to landing screen
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
       return LandingScreen(
         userData: userData,
@@ -88,7 +90,6 @@ class _LauncherScreenState extends State<LauncherScreen> {
   }
 
   void mCheckUserLoggedInStatus() async {
-    // e: new
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await Future.delayed(const Duration(milliseconds: 3000))
         .then((value) async {

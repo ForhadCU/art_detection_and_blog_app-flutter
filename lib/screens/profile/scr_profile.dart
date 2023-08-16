@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +38,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     logger.w("Call Profile");
 
-
 /*     mLoadData(); // c: Load latest 10 posts from firebase firestore
 
     mControlListViewSrolling(); // c: Post listView scroll listener for control pagination
@@ -53,6 +51,27 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       // backgroundColor: MyColors.thirdColor.withOpacity(0.5),
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: MyColors.secondColor,
+        elevation: 0,
+        actions: [
+          InkWell(
+            onTap: () {
+              // add post
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return EditProfilePage(userData: widget.userData);
+              }));
+            },
+            child: const Icon(
+              Icons.edit,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+       const SizedBox(width: 24,)
+        ],
+      ),
+
       body: Stack(
         children: [
           // Container(height: MyScreenSize.mGetHeight(context, 100), width: MyScreenSize.mGetWidth(context, 100), color: Colors.blue,),
@@ -104,20 +123,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget vProfileImage(double height, double width) {
     return Container(
-      width: height,
-      height: width,
-      decoration: BoxDecoration(
-        border: Border.all(color: MyColors.fourthColor, width: 5),
-        shape: BoxShape.circle,
-        color: MyColors.fourthColor,
-        image: const DecorationImage(
-            fit: BoxFit.contain,
-            image: AssetImage('assets/images/profile_pic.jpeg'),
-            // image: AssetImage("assets/images/user.png"),
+        width: height,
+        height: width,
+        decoration: BoxDecoration(
+            border: Border.all(color: MyColors.fourthColor, width: 5),
+            shape: BoxShape.circle,
+            color: MyColors.fourthColor,
+            image: const DecorationImage(
+              fit: BoxFit.contain,
+              image: AssetImage('assets/images/profile_pic.jpeg'),
+              // image: AssetImage("assets/images/user.png"),
 /*             image: NetworkImage(
                 "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg6X-MjDqDlh3z14MA3U9RgogW64BBMHzpZijczfoZNbpxBDj_tqvvWAdzvrqX_KWvs92nF4r-AU-i4AXW0pch8AAbgnrawaLjMCTKgdkF1jhtnXsrQ-A5pNXKXPyGWR69YHm5Hr9CQxMdMvFnCyM4fNZyR9PZa3PuOBbSeFU-LApOxvOx1_J5Vn_rLuQ/w640-h640/images%20(5)%20(11).jpeg")),
- */      
-      )));
+ */
+            )));
   }
 
   vUserNameAndEmail() {
@@ -159,75 +178,44 @@ class _ProfilePageState extends State<ProfilePage> {
   vAddPostAndEditProfile(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          flex: 2,
-          child: ElevatedButton(
-              onPressed: () {
-                // show post
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return MyPostScreen(userData: widget.userData);
-                }));
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: MyColors.secondColor,
-                  fixedSize: Size(0, MyScreenSize.mGetHeight(context, 3.5))),
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.newspaper_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text("My Posts")
-                ],
-              )),
-        ),
+        ElevatedButton(
+            onPressed: () {
+              // show post
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return MyPostScreen(userData: widget.userData);
+              }));
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: MyColors.secondColor,
+              // fixedSize: Size(0, MyScreenSize.mGetHeight(context, 3.5)),
+            ),
+            child: const Row(
+              children: [
+                Icon(
+                  Icons.newspaper_outlined,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text("My Posts")
+              ],
+            )),
         const SizedBox(
           width: 14,
         ),
-        Expanded(
-          flex: 2,
-          child: ElevatedButton(
-              onPressed: () {
-                // add post
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return EditProfilePage(userData: widget.userData);
-                }));
-              },
-              style: ElevatedButton.styleFrom(
-                  // backgroundColor: MyColors.firstColor,
-                  backgroundColor: MyColors.secondColor,
-                  fixedSize: Size(0, MyScreenSize.mGetHeight(context, 3.5))),
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text("Edit Profile")
-                ],
-              )),
-        ),
-        /*  PopupMenuButton(itemBuilder: (context) {
-          return [];
-        }) */
-        Expanded(
-            child: InkWell(
-                onTap: () {
-                  setState(() {
-                    _isUserDataExpanded = !_isUserDataExpanded;
-                  });
-                },
-                child: const Icon(
-                  Icons.arrow_drop_down,
-                  color: Colors.black45,
-                  size: 32,
-                )))
+       
+        InkWell(
+            onTap: () {
+              setState(() {
+                _isUserDataExpanded = !_isUserDataExpanded;
+              });
+            },
+            child: const Icon(
+              Icons.arrow_drop_down,
+              color: Colors.black45,
+              size: 32,
+            ))
       ],
     );
   }
@@ -274,11 +262,12 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           flex: 3,
           child: Container(
-              alignment: Alignment.centerLeft, child: const Text("Date of birth")),
+              alignment: Alignment.centerLeft,
+              child: const Text("Date of birth")),
         ),
         Expanded(
-            child:
-                Container(alignment: Alignment.centerLeft, child: const Text(":"))),
+            child: Container(
+                alignment: Alignment.centerLeft, child: const Text(":"))),
         Expanded(
           flex: 6,
           child: Container(
@@ -312,8 +301,8 @@ class _ProfilePageState extends State<ProfilePage> {
               alignment: Alignment.centerLeft, child: const Text("Location")),
         ),
         Expanded(
-            child:
-                Container(alignment: Alignment.centerLeft, child: const Text(":"))),
+            child: Container(
+                alignment: Alignment.centerLeft, child: const Text(":"))),
         Expanded(
           flex: 6,
           child: Container(
@@ -347,8 +336,8 @@ class _ProfilePageState extends State<ProfilePage> {
               alignment: Alignment.centerLeft, child: const Text("Contact No")),
         ),
         Expanded(
-            child:
-                Container(alignment: Alignment.centerLeft, child: const Text(":"))),
+            child: Container(
+                alignment: Alignment.centerLeft, child: const Text(":"))),
         Expanded(
           flex: 6,
           child: Container(

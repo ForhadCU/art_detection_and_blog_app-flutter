@@ -145,14 +145,14 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.person,
+                    Icons.play_arrow,
                     color: tabColor1,
                   ),
                   const SizedBox(
                     height: 4,
                   ),
                   Text(
-                    "Profile",
+                    "Videos",
                     style: TextStyle(color: tabColor1),
                   )
                 ],

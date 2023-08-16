@@ -197,14 +197,7 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                         child: InkWell(
                                           onTap: () {
                                             _imgDetailModelList.clear();
-                                            //* for single image pick
-                                            /*     MyServices.mPickImgFromLocal()
-                                          .then((value) {
-                                        if (value != null) {
-                                          setState(() { });    
-                          
-                                        }
-                                      }); */
+                                           
                                             // m: pick image from local storage
                                             MyServices
                                                     .mPickMultipleImageFromLocal()
@@ -213,7 +206,9 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                                                 // c: assign image Details Model list
                                                 _imgDetailModelList = value;
                                                 // c: Referesh screen for show image preview in the horizontal List view
-                                                setState(() {});
+                                                setState(() {
+
+                                                });
                                               }
                                             });
                                           },
@@ -633,10 +628,10 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
       _recognitions = recognitions!;
       _isScanning = false;
 
-      for (var i = 0; i < _recognitions!.length; i++) {
+      /* for (var i = 0; i < _recognitions!.length; i++) {
         logger.d(
             "Label: ${_recognitions![i]['label']} \n Confidence: ${_recognitions![i]['confidence']}");
-      }
+      } */
     });
   }
 

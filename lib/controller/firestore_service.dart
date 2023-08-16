@@ -15,12 +15,12 @@ Logger logger = Logger();
 class MyFirestoreService {
   static Future<bool> mStoreUserCredential(
       {required FirebaseFirestore firebaseFirestore,
-      required UserData user}) async {
+      required UserData users}) async {
     try {
       await firebaseFirestore
           .collection(MyKeywords.USER)
-          .doc(user.email)
-          .set(user.toJson());
+          .doc(users.email)
+          .set(users.toJson());
       return true;
     } catch (e) {
       logger.e("Error in storing user credential: $e");

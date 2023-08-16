@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/const/constants.dart';
 import 'package:flutter_application_1/const/keywords.dart';
 import 'package:flutter_application_1/controller/my_authentication_service.dart';
 import 'package:flutter_application_1/controller/firestore_service.dart';
@@ -34,7 +37,7 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  final String _userName = "user_0012001";
+  MyConstants _myConstants = MyConstants();
   final String _imgCategory = "all category";
   int _pageIndex = 0;
   final Logger logger = Logger();
@@ -48,6 +51,8 @@ class _LandingScreenState extends State<LandingScreen> {
   late final ScrollController _scrollController = ScrollController();
   late CollectionReference _collectionReferencePOST;
   late CollectionReference _collectionReferenceLIKER;
+  String _currentPage = "1";
+  bool _paginationing = false;
 
 // >>
   @override
@@ -83,8 +88,8 @@ class _LandingScreenState extends State<LandingScreen> {
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: MyColors.secondColor,
           elevation: 0,
-          actions: const [
-            // vActionItems(),
+          actions: [
+            vActionItems(),
           ],
         ),
         drawer: Drawer(
@@ -115,42 +120,52 @@ class _LandingScreenState extends State<LandingScreen> {
         body: _pageIndex == 0
             ? vHome()
             : _pageIndex == 1
-                ? ProfilePage(
-                    userData: widget.userData,
-                  )
+                ? const ArtGuideScreen()
                 : null);
   }
 
   Widget vActionItems() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          _userName,
-          style: const TextStyle(color: MyColors.secondColor),
-        ),
-        const SizedBox(
-          width: 12,
-        ),
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: MyColors.secondColor,
-                width: .8,
-              )),
-          child: const CircleAvatar(
-            backgroundImage: AssetImage(
-              "assets/images/user.png",
+    return InkWell(
+      onTap: () {
+        // go to profile page
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ProfilePage(
+            userData: widget.userData,
+          );
+        }));
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.userData.username == null
+                ? "user_1"
+                : widget.userData.username!,
+            style: const TextStyle(color: Colors.white),
+          ),
+          const SizedBox(
+            width: 12,
+          ),
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white70,
+                  width: .9,
+                )),
+            child: const CircleAvatar(
+              backgroundImage: AssetImage(
+                "assets/images/profile_pic.jpeg",
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          width: 24,
-        )
-      ],
+          const SizedBox(
+            width: 24,
+          )
+        ],
+      ),
     );
   }
 
@@ -160,27 +175,8 @@ class _LandingScreenState extends State<LandingScreen> {
       // width: MyScreenSize.mGetWidth(context, 60),
       child: ListView(
         children: [
-          vDrawerHeader(),
-          ListTile(
-            title: const Text(
-              "Art Guide Video",
-            ),
-            leading: const Icon(Icons.play_arrow_rounded),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const ArtGuideScreen();
-              }));
-            },
-          ),
-          ListTile(
-            title: const Text(
-              "Share",
-            ),
-            leading: const Icon(Icons.share),
-            onTap: () {
-              Navigator.pop(context);
-            },
+          const SizedBox(
+            height: 24,
           ),
           ListTile(
             title: const Text(
@@ -219,7 +215,10 @@ class _LandingScreenState extends State<LandingScreen> {
       currentAccountPicture: CircleAvatar(
         child: widget.userData.imgUri != null
             ? Image(image: NetworkImage(widget.userData.imgUri!))
-            : const Image(image: AssetImage("assets/images/user.png")),
+            : const CircleAvatar(
+                backgroundImage: AssetImage(
+                "assets/images/profile_pic.jpeg",
+              )),
       ),
     );
   }
@@ -268,26 +267,46 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Widget vPostList() {
-    return ListView.builder(
-        controller: _scrollController,
-        itemCount: posts!.length + 1,
-        itemBuilder: ((context, index) {
-          return index < posts!.length
-              ? index == 0
-                  ? Padding(
-                      padding: EdgeInsets.only(
-                          top: MyScreenSize.mGetHeight(context, 11)),
-                      child: vItem(index),
-                    )
-                  : vItem(index)
-              /*   : posts!.length > 1
-                  ? MyWidget.vPostPaginationShimmering(context: context)
-                  : Container(); */
-              : posts!.length > 1 && !_isNoDataExist
-                  // ? MyWidget.vPostPaginationShimmering(context: context)
-                  ? vLoadMoreButton()
-                  : Container();
-        }));
+    return Stack(children: [
+      ListView.builder(
+          controller: _scrollController,
+          itemCount: posts!.length + 1,
+          itemBuilder: ((context, index) {
+            return index < posts!.length
+                ? index == 0
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            top: MyScreenSize.mGetHeight(context, 11)),
+                        child: vItem(index),
+                      )
+                    : vItem(index)
+                /*   : posts!.length > 1
+                    ? MyWidget.vPostPaginationShimmering(context: context)
+                    : Container(); */
+                : posts!.length > 1 && !_isNoDataExist
+                    // ? MyWidget.vPostPaginationShimmering(context: context)
+                    // ? vLoadMoreButton()
+                    ? vPaginationButtons()
+                    : Container();
+          })),
+      Visibility(
+        visible: _paginationing,
+        child: Expanded(
+          child: Center(
+            child: Container(
+              color: Colors.black26,
+              child: GFLoader(
+                loaderColorOne: MyColors.secondColor,
+                loaderColorTwo: Colors.yellow,
+                loaderColorThree: Colors.red,
+                size: GFSize.LARGE,
+                // type: GFLoaderType.ios,
+              ),
+            ),
+          ),
+        ),
+      )
+    ]);
   }
 
   Widget vCategoryDropdown() {
@@ -399,8 +418,10 @@ class _LandingScreenState extends State<LandingScreen> {
         titleText: post.users!.username,
         listItemTextColor: Colors.white,
         // subTitleText: mFormatDateTime(post),
-        subTitle: Text(mFormatDateTime(post), style:  TextStyle(color: Colors.white),),
-        
+        subTitle: Text(
+          mFormatDateTime(post),
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       content: vCatAndCap(post),
       buttonBar: GFButtonBar(
@@ -594,11 +615,13 @@ class _LandingScreenState extends State<LandingScreen> {
         /*     List<Post> tempPosts = posts!;
         posts!.clear(); */
         setState(() {
+          _paginationing = false;
           posts!.addAll(value);
         });
       } else {
         logger.w("No Data exist");
         setState(() {
+          _paginationing = false;
           _isNoDataExist = true;
         });
       }
@@ -703,7 +726,9 @@ class _LandingScreenState extends State<LandingScreen> {
 
   vHomeBody() {
     return _isDataLoading
-        ? vPostShimmering()
+        ? const GFLoader(
+            type: GFLoaderType.ios,
+          )
         : posts == null || posts!.isEmpty
             ? vNoResultFound()
             : vPostList();
@@ -729,7 +754,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 // backgroundColor: post.likeStatus!
                 ? MyColors.thirdColor
                 : Colors.black12 /* GFColors.PRIMARY */,
-                // : MyColors.secondColor5 /* GFColors.PRIMARY */,
+            // : MyColors.secondColor5 /* GFColors.PRIMARY */,
             size: GFSize.SMALL,
             child: Icon(
               Icons.star_border,
@@ -915,6 +940,298 @@ class _LandingScreenState extends State<LandingScreen> {
       // c: refresh
       setState(() {});
     });
+  }
+
+  vPaginationButtons() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(
+                          left: 18, right: 18, top: 12, bottom: 28),
+                      child: Text(_myConstants.list[0],
+                          style: _currentPage == _myConstants.list[0]
+                              ? TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ))),
+                ],
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _paginationing = true;
+                    _currentPage = _myConstants.list[1];
+                  });
+                  Fluttertoast.showToast(
+                      msg: "Loading...",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black87,
+                      textColor: Colors.white,
+                      fontSize: 14.0);
+
+                  mLoadMore();
+                },
+                child: Row(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(
+                            left: 18, right: 18, top: 12, bottom: 28),
+                        child: Text(_myConstants.list[1],
+                            style: _currentPage == _myConstants.list[1]
+                                ? TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  )
+                                : TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ))),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _paginationing = true;
+                    _currentPage = _myConstants.list[2];
+                  });
+                  Fluttertoast.showToast(
+                      msg: "Loading...",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black87,
+                      textColor: Colors.white,
+                      fontSize: 14.0);
+
+                  mLoadMore();
+                },
+                child: Row(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(
+                            left: 18, right: 18, top: 12, bottom: 28),
+                        child: Text(_myConstants.list[2],
+                            style: _currentPage == _myConstants.list[2]
+                                ? TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  )
+                                : TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ))),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _paginationing = true;
+
+                    _currentPage = _myConstants.list[3];
+                  });
+                  Fluttertoast.showToast(
+                      msg: "Loading...",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black87,
+                      textColor: Colors.white,
+                      fontSize: 14.0);
+
+                  mLoadMore();
+                },
+                child: Row(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(
+                            left: 18, right: 18, top: 12, bottom: 28),
+                        child: Text(_myConstants.list[3],
+                            style: _currentPage == _myConstants.list[3]
+                                ? TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  )
+                                : TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ))),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _paginationing = true;
+
+                    _currentPage = _myConstants.list[4];
+                  });
+                  Fluttertoast.showToast(
+                      msg: "Loading...",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black87,
+                      textColor: Colors.white,
+                      fontSize: 14.0);
+
+                  mLoadMore();
+                },
+                child: Row(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(
+                            left: 18, right: 18, top: 12, bottom: 28),
+                        child: Text(_myConstants.list[4],
+                            style: _currentPage == _myConstants.list[4]
+                                ? TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  )
+                                : TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ))),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _paginationing = true;
+
+                    _currentPage = _myConstants.list[5];
+                  });
+                  Fluttertoast.showToast(
+                      msg: "Loading...",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black87,
+                      textColor: Colors.white,
+                      fontSize: 14.0);
+
+                  mLoadMore();
+                },
+                child: Row(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(
+                            left: 18, right: 18, top: 12, bottom: 28),
+                        child: Text(_myConstants.list[5],
+                            style: _currentPage == _myConstants.list[5]
+                                ? TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  )
+                                : TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ))),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(
+                          left: 18, right: 18, top: 12, bottom: 28),
+                      child: Text(_myConstants.list[6],
+                          style: _currentPage == _myConstants.list[6]
+                              ? TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ))),
+                ],
+              ),
+            ),
+            /* 
+            ListView.builder(
+                itemCount: _myConstants.list.length,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: ((context, index) {
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        _currentPage = _myConstants.list[index];
+                      });
+
+                      Fluttertoast.showToast(
+                          msg: "Loading...",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.black87,
+                          textColor: Colors.white,
+                          fontSize: 14.0);
+
+                      mLoadMore();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      child: Text(_myConstants.list[index],
+                          style: _currentPage == _myConstants.list[index]
+                              ? TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                )
+                              : TextStyle(
+                                  color: Colors.black45,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                )),
+                    ),
+                  );
+                })),
+          */
+          ],
+        ),
+      ],
+    );
   }
 
   vLoadMoreButton() {

@@ -48,4 +48,5 @@ class MyKeywords {
   // m: For Sharedpreparance
   static const String singleImgUrls = "singleImgUrls";
   static const String sessionStatus = "sessionStatus";
+  
 }
