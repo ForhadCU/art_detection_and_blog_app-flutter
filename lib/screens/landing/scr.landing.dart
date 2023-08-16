@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -120,33 +120,29 @@ class _LandingScreenState extends State<LandingScreen> {
         body: _pageIndex == 0
             ? vHome()
             : _pageIndex == 1
-                ? const ArtGuideScreen()
+                ? ProfilePage(userData: widget.userData)
                 : null);
   }
 
   Widget vActionItems() {
     return InkWell(
       onTap: () {
-        // go to profile page
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ProfilePage(
-            userData: widget.userData,
-          );
+          return const MapIFrameScreen();
         }));
       },
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            widget.userData.username == null
-                ? "user_1"
-                : widget.userData.username!,
+            "Map",
             style: const TextStyle(color: Colors.white),
           ),
           const SizedBox(
             width: 12,
           ),
-          Container(
+          Icon(Icons.location_pin, color: Colors.white, size: 28),
+          /* Container(
             width: 32,
             height: 32,
             decoration: BoxDecoration(
@@ -155,12 +151,8 @@ class _LandingScreenState extends State<LandingScreen> {
                   color: Colors.white70,
                   width: .9,
                 )),
-            child: const CircleAvatar(
-              backgroundImage: AssetImage(
-                "assets/images/profile_pic.jpeg",
-              ),
-            ),
-          ),
+            child: 
+          ), */
           const SizedBox(
             width: 24,
           )
@@ -180,12 +172,12 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           ListTile(
             title: const Text(
-              "Map",
+              "Videos",
             ),
-            leading: const Icon(Icons.location_pin),
+            leading: const Icon(Icons.play_arrow),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const MapIFrameScreen();
+                return const ArtGuideScreen();
               }));
             },
           ),
@@ -203,7 +195,7 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  Widget vDrawerHeader() {
+  /* Widget vDrawerHeader() {
     return UserAccountsDrawerHeader(
       decoration: const BoxDecoration(color: MyColors.secondColor),
       accountName: Text(
@@ -221,7 +213,7 @@ class _LandingScreenState extends State<LandingScreen> {
               )),
       ),
     );
-  }
+  } */
 
   mShowBottomSheet() {
     showModalBottomSheet(
@@ -280,12 +272,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         child: vItem(index),
                       )
                     : vItem(index)
-                /*   : posts!.length > 1
-                    ? MyWidget.vPostPaginationShimmering(context: context)
-                    : Container(); */
                 : posts!.length > 1 && !_isNoDataExist
-                    // ? MyWidget.vPostPaginationShimmering(context: context)
-                    // ? vLoadMoreButton()
                     ? vPaginationButtons()
                     : Container();
           })),
@@ -1086,86 +1073,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 ),
               ),
             ),
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    _paginationing = true;
-
-                    _currentPage = _myConstants.list[4];
-                  });
-                  Fluttertoast.showToast(
-                      msg: "Loading...",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.black87,
-                      textColor: Colors.white,
-                      fontSize: 14.0);
-
-                  mLoadMore();
-                },
-                child: Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(
-                            left: 18, right: 18, top: 12, bottom: 28),
-                        child: Text(_myConstants.list[4],
-                            style: _currentPage == _myConstants.list[4]
-                                ? TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  )
-                                : TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ))),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    _paginationing = true;
-
-                    _currentPage = _myConstants.list[5];
-                  });
-                  Fluttertoast.showToast(
-                      msg: "Loading...",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.black87,
-                      textColor: Colors.white,
-                      fontSize: 14.0);
-
-                  mLoadMore();
-                },
-                child: Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(
-                            left: 18, right: 18, top: 12, bottom: 28),
-                        child: Text(_myConstants.list[5],
-                            style: _currentPage == _myConstants.list[5]
-                                ? TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  )
-                                : TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ))),
-                  ],
-                ),
-              ),
-            ),
+            
             Expanded(
               child: Row(
                 children: [

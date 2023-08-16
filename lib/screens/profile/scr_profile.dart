@@ -51,26 +51,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       // backgroundColor: MyColors.thirdColor.withOpacity(0.5),
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: MyColors.secondColor,
-        elevation: 0,
-        actions: [
-          InkWell(
-            onTap: () {
-              // add post
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return EditProfilePage(userData: widget.userData);
-              }));
-            },
-            child: const Icon(
-              Icons.edit,
-              color: Colors.white,
-              size: 24,
-            ),
-          ),
-       const SizedBox(width: 24,)
-        ],
-      ),
 
       body: Stack(
         children: [
@@ -116,6 +96,36 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
+          Positioned(
+            top: 0,
+            right: 24,
+            child: InkWell(
+              onTap: () {
+                // add post
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return EditProfilePage(userData: widget.userData);
+                }));
+              },
+              child: const Row(
+                children: [
+                  Text(
+                    "Edit",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+                  SizedBox(width: 16,)
+                  ,
+                  Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -204,7 +214,6 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(
           width: 14,
         ),
-       
         InkWell(
             onTap: () {
               setState(() {
